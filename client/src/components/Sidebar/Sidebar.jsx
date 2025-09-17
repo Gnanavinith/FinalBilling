@@ -2,6 +2,7 @@ import React, { useMemo } from 'react'
 import SidebarItem from './SidebarItem'
 import { MdSpaceDashboard, MdReceiptLong, MdPeople, MdShoppingCart, MdInventory2, MdBuild, MdCompareArrows, MdAssessment, MdSettings, MdSmartphone, MdHeadphones, MdPhoneAndroid } from 'react-icons/md'
 import { useAuth } from '../../context/AuthContext'
+import thumbnail from '../../assets/thumbnail.bmp'
 
 const Sidebar = () => {
   const { auth } = useAuth()
@@ -15,9 +16,8 @@ const Sidebar = () => {
 
   return (
     <aside className="h-screen w-72 flex-shrink-0 bg-gradient-to-b from-white to-indigo-50 border-r border-slate-200 text-slate-800 p-3 sticky top-0 transition-colors duration-200 overflow-y-auto print:hidden">
-      <div className="px-2 py-3 mb-3">
-        <div className="text-xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">MobileBill</div>
-        <div className="text-xs text-slate-400">POS & Service Manager</div>
+      <div className="px-2 py-3 mb-3 flex items-center justify-center">
+        <img src={thumbnail} alt="Shop" className=" max-h-20 border object-full" />
       </div>
 
       <nav className="space-y-1">

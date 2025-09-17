@@ -463,3 +463,493 @@ const MobilesStock = () => {
 export default MobilesStock
 
 
+
+                  <input 
+
+                    className="w-full rounded-xl border-2 border-slate-200 px-3 py-2 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100 transition-all" 
+
+                    value={form.imeiNumber1} 
+
+                    onChange={e=>setForm({...form, imeiNumber1:e.target.value})}
+
+                    onKeyDown={(e)=>{ if(e.key==='Enter'){ e.preventDefault() } }}
+
+                    autoFocus
+
+                    autoComplete="off"
+
+                    inputMode="numeric"
+
+                    pattern="[0-9]*"
+
+                    placeholder="Scan/enter IMEI 1 and press Enter"
+
+                  />
+
+                </div>
+
+                <div>
+
+                  <label className="block text-sm font-medium text-slate-700 mb-1">IMEI 2 (optional)</label>
+
+                  <input 
+
+                    className="w-full rounded-xl border-2 border-slate-200 px-3 py-2 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100 transition-all" 
+
+                    value={form.imeiNumber2} 
+
+                    onChange={e=>setForm({...form, imeiNumber2:e.target.value})}
+
+                    onKeyDown={(e)=>{ if(e.key==='Enter'){ e.preventDefault() } }}
+
+                    autoComplete="off"
+
+                    inputMode="numeric"
+
+                    pattern="[0-9]*"
+
+                    placeholder="Scan/enter IMEI 2"
+
+                  />
+
+                </div>
+
+                <div>
+
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Color</label>
+
+                  <input className="w-full rounded-xl border-2 border-slate-200 px-3 py-2 focus:border-pink-400 focus:ring-4 focus:ring-pink-100 transition-all" value={form.color} onChange={e=>setForm({...form, color:e.target.value})} placeholder="e.g., Black, White, Blue" />
+
+                  <div className="mt-1 flex flex-wrap gap-1">
+
+                    {suggestions.color.map(v => (
+
+                      <button key={v} type="button" onClick={()=>setForm({...form, color:v})} className="px-2 py-1 text-xs rounded-md border hover:bg-slate-50">
+
+                        {v}
+
+                      </button>
+
+                    ))}
+
+                  </div>
+
+                </div>
+
+                <div>
+
+                  <label className="block text-sm font-medium text-slate-700 mb-1">RAM</label>
+
+                  <input className="w-full rounded-xl border-2 border-slate-200 px-3 py-2 focus:border-amber-400 focus:ring-4 focus:ring-amber-100 transition-all" value={form.ram} onChange={e=>setForm({...form, ram:e.target.value})} placeholder="e.g., 4GB, 6GB, 8GB" />
+
+                  <div className="mt-1 flex flex-wrap gap-1">
+
+                    {suggestions.ram.map(v => (
+
+                      <button key={v} type="button" onClick={()=>setForm({...form, ram:v})} className="px-2 py-1 text-xs rounded-md border hover:bg-slate-50">
+
+                        {v}
+
+                      </button>
+
+                    ))}
+
+                  </div>
+
+                </div>
+
+                <div>
+
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Storage</label>
+
+                  <input className="w-full rounded-xl border-2 border-slate-200 px-3 py-2 focus:border-teal-400 focus:ring-4 focus:ring-teal-100 transition-all" value={form.storage} onChange={e=>setForm({...form, storage:e.target.value})} placeholder="e.g., 64GB, 128GB, 256GB" />
+
+                  <div className="mt-1 flex flex-wrap gap-1">
+
+                    {suggestions.storage.map(v => (
+
+                      <button key={v} type="button" onClick={()=>setForm({...form, storage:v})} className="px-2 py-1 text-xs rounded-md border hover:bg-slate-50">
+
+                        {v}
+
+                      </button>
+
+                    ))}
+
+                  </div>
+
+                </div>
+
+                <div>
+
+                  <label className="block text-sm font-medium text-slate-700 mb-1">SIM Slot</label>
+
+                  <input className="w-full rounded-xl border-2 border-slate-200 px-3 py-2 focus:border-sky-400 focus:ring-4 focus:ring-sky-100 transition-all" value={form.simSlot} onChange={e=>setForm({...form, simSlot:e.target.value})} placeholder="e.g., Dual SIM, Single SIM" />
+
+                  <div className="mt-1 flex flex-wrap gap-1">
+
+                    {suggestions.simSlot.map(v => (
+
+                      <button key={v} type="button" onClick={()=>setForm({...form, simSlot:v})} className="px-2 py-1 text-xs rounded-md border hover:bg-slate-50">
+
+                        {v}
+
+                      </button>
+
+                    ))}
+
+                  </div>
+
+                </div>
+
+                <div>
+
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Processor</label>
+
+                  <input className="w-full rounded-xl border-2 border-slate-200 px-3 py-2 focus:border-purple-400 focus:ring-4 focus:ring-purple-100 transition-all" value={form.processor} onChange={e=>setForm({...form, processor:e.target.value})} placeholder="e.g., Snapdragon 888, A15 Bionic" />
+
+                  <div className="mt-1 flex flex-wrap gap-1">
+
+                    {suggestions.processor.map(v => (
+
+                      <button key={v} type="button" onClick={()=>setForm({...form, processor:v})} className="px-2 py-1 text-xs rounded-md border hover:bg-slate-50">
+
+                        {v}
+
+                      </button>
+
+                    ))}
+
+                  </div>
+
+                </div>
+
+                <div>
+
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Display Size</label>
+
+                  <input className="w-full rounded-xl border-2 border-slate-200 px-3 py-2 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100 transition-all" value={form.displaySize} onChange={e=>setForm({...form, displaySize:e.target.value})} placeholder="e.g., 6.1 inch, 6.7 inch" />
+
+                  <div className="mt-1 flex flex-wrap gap-1">
+
+                    {suggestions.displaySize.map(v => (
+
+                      <button key={v} type="button" onClick={()=>setForm({...form, displaySize:v})} className="px-2 py-1 text-xs rounded-md border hover:bg-slate-50">
+
+                        {v}
+
+                      </button>
+
+                    ))}
+
+                  </div>
+
+                </div>
+
+                <div>
+
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Camera</label>
+
+                  <input className="w-full rounded-xl border-2 border-slate-200 px-3 py-2 focus:border-pink-400 focus:ring-4 focus:ring-pink-100 transition-all" value={form.camera} onChange={e=>setForm({...form, camera:e.target.value})} placeholder="e.g., 12MP + 12MP, 108MP" />
+
+                  <div className="mt-1 flex flex-wrap gap-1">
+
+                    {suggestions.camera.map(v => (
+
+                      <button key={v} type="button" onClick={()=>setForm({...form, camera:v})} className="px-2 py-1 text-xs rounded-md border hover:bg-slate-50">
+
+                        {v}
+
+                      </button>
+
+                    ))}
+
+                  </div>
+
+                </div>
+
+                <div>
+
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Battery</label>
+
+                  <input className="w-full rounded-xl border-2 border-slate-200 px-3 py-2 focus:border-amber-400 focus:ring-4 focus:ring-amber-100 transition-all" value={form.battery} onChange={e=>setForm({...form, battery:e.target.value})} placeholder="e.g., 4000mAh, 5000mAh" />
+
+                  <div className="mt-1 flex flex-wrap gap-1">
+
+                    {suggestions.battery.map(v => (
+
+                      <button key={v} type="button" onClick={()=>setForm({...form, battery:v})} className="px-2 py-1 text-xs rounded-md border hover:bg-slate-50">
+
+                        {v}
+
+                      </button>
+
+                    ))}
+
+                  </div>
+
+                </div>
+
+                <div>
+
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Operating System</label>
+
+                  <input className="w-full rounded-xl border-2 border-slate-200 px-3 py-2 focus:border-teal-400 focus:ring-4 focus:ring-teal-100 transition-all" value={form.operatingSystem} onChange={e=>setForm({...form, operatingSystem:e.target.value})} placeholder="e.g., Android 12, iOS 15" />
+
+                  <div className="mt-1 flex flex-wrap gap-1">
+
+                    {suggestions.operatingSystem.map(v => (
+
+                      <button key={v} type="button" onClick={()=>setForm({...form, operatingSystem:v})} className="px-2 py-1 text-xs rounded-md border hover:bg-slate-50">
+
+                        {v}
+
+                      </button>
+
+                    ))}
+
+                  </div>
+
+                </div>
+
+                <div>
+
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Network Type</label>
+
+                  <input className="w-full rounded-xl border-2 border-slate-200 px-3 py-2 focus:border-sky-400 focus:ring-4 focus:ring-sky-100 transition-all" value={form.networkType} onChange={e=>setForm({...form, networkType:e.target.value})} placeholder="e.g., 5G, 4G LTE" />
+
+                  <div className="mt-1 flex flex-wrap gap-1">
+
+                    {suggestions.networkType.map(v => (
+
+                      <button key={v} type="button" onClick={()=>setForm({...form, networkType:v})} className="px-2 py-1 text-xs rounded-md border hover:bg-slate-50">
+
+                        {v}
+
+                      </button>
+
+                    ))}
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div className="flex gap-2">
+
+              <button disabled={saving} className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white disabled:opacity-50 shadow-md hover:shadow-lg hover:from-blue-600 hover:to-blue-700 transition-all">{saving ? 'Saving...' : (editingId ? 'Update' : 'Add to Inventory')}</button>
+
+              {editingId ? (
+
+                <button type="button" onClick={()=>{ 
+
+                  setEditingId(''); 
+
+                  setForm({ 
+
+                    mobileName: '', 
+
+                    brand: '',
+
+                    modelNumber: '', 
+
+                    productId: '',
+
+                    productIds: [],
+
+                    imeiNumber1: '', 
+
+                    imeiNumber2: '', 
+
+                    dealerId: '', 
+
+                    pricePerProduct: 0, 
+
+                    sellingPrice: 0,
+
+                    color: '',
+
+                    ram: '',
+
+                    storage: '',
+
+                    simSlot: '',
+
+                    processor: '',
+
+                    displaySize: '',
+
+                    camera: '',
+
+                    battery: '',
+
+                    operatingSystem: '',
+
+                    networkType: '',
+
+                  }) 
+
+                }} className="px-4 py-2.5 rounded-xl border-2 border-slate-300 hover:bg-slate-50 transition-all">Cancel</button>
+
+              ) : null}
+
+            </div>
+
+          </form>
+
+        </div>
+
+        <div className="lg:col-span-2 rounded-2xl bg-white border border-slate-200 p-6 shadow-lg hover:shadow-xl transition-all">
+
+          <div className="flex items-center gap-2 mb-4">
+
+            <select className="rounded-xl border-2 border-slate-200 px-3 py-2 focus:border-blue-400 focus:ring-4 focus:ring-blue-100 transition-all" value={q.dealerId} onChange={e=>setQ({...q, dealerId:e.target.value})}>
+
+              <option value="">All Dealers</option>
+
+              {dealers.map(d=> <option key={d.id} value={d.id}>{d.name}</option>)}
+
+            </select>
+
+            <input placeholder="Model Number" className="rounded-xl border-2 border-slate-200 px-3 py-2 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100 transition-all" value={q.modelNumber} onChange={e=>setQ({...q, modelNumber:e.target.value})} />
+
+<<<<<<< HEAD
+
+            <input placeholder="IMEI" className="rounded-xl border-2 border-slate-200 px-3 py-2 focus:border-purple-400 focus:ring-4 focus:ring-purple-100 transition-all" value={q.imei} onChange={e=>setQ({...q, imei:e.target.value})} />
+
+=======
+
+>>>>>>> 40aa0339640b45c58a0518a12cb4118d06c81e2e
+
+            <button onClick={load} className="px-4 py-2.5 rounded-xl border-2 border-slate-300 hover:bg-slate-50 transition-all">Filter</button>
+
+            <button onClick={load} className="px-4 py-2.5 rounded-xl bg-blue-500 text-white hover:bg-blue-600 transition-all">Refresh</button>
+
+          </div>
+
+          <div className="overflow-x-auto">
+
+            <table className="min-w-full text-sm">
+
+              <thead>
+
+                <tr className="text-left text-slate-600 text-xs uppercase bg-gradient-to-r from-indigo-50 to-blue-50">
+
+                  <th className="py-2 pr-4">Mobile</th>
+
+                  <th className="py-2 pr-4">Model</th>
+
+                  <th className="py-2 pr-4">Color</th>
+
+                  <th className="py-2 pr-4">RAM</th>
+
+                  <th className="py-2 pr-4">Storage</th>
+
+                  <th className="py-2 pr-4">IMEI1</th>
+
+                  <th className="py-2 pr-4">IMEI2</th>
+
+                  <th className="py-2 pr-4">Dealer</th>
+
+<<<<<<< HEAD
+
+                  <th className="py-2 pr-4">IMEI</th>
+
+=======
+
+>>>>>>> 40aa0339640b45c58a0518a12cb4118d06c81e2e
+
+                  <th className="py-2 pr-4">Cost</th>
+
+                  <th className="py-2 pr-4">Sell</th>
+
+                  <th className="py-2 pr-4">Qty</th>
+
+                  <th className="py-2 pr-2">Actions</th>
+
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                {filtered.map((r)=> (
+
+                  <tr key={r.id} className="border-t border-slate-100 hover:bg-slate-50 transition-colors">
+
+                    <td className="py-2 pr-4">{r.mobileName}</td>
+
+                    <td className="py-2 pr-4">{r.modelNumber}</td>
+
+                    <td className="py-2 pr-4">{r.color || '-'}</td>
+
+                    <td className="py-2 pr-4">{r.ram || '-'}</td>
+
+                    <td className="py-2 pr-4">{r.storage || '-'}</td>
+
+                    <td className="py-2 pr-4">{r.imeiNumber1}</td>
+
+                    <td className="py-2 pr-4">{r.imeiNumber2 || '-'}</td>
+
+                    <td className="py-2 pr-4">{r.dealerName}</td>
+
+<<<<<<< HEAD
+
+                    <td className="py-2 pr-4">{r.imeiNumber1 || '-'}</td>
+
+=======
+
+>>>>>>> 40aa0339640b45c58a0518a12cb4118d06c81e2e
+
+                    <td className="py-2 pr-4">{r.pricePerProduct}</td>
+
+                    <td className="py-2 pr-4">{r.sellingPrice || '-'}</td>
+
+                    <td className="py-2 pr-4">{r.totalQuantity}</td>
+
+                    <td className="py-2 pr-2">
+
+                      <div className="flex gap-2">
+
+                        <button onClick={()=>onEdit(r)} className="text-blue-600 hover:text-blue-800">Edit</button>
+
+                        <button onClick={()=>moveToInventory(r)} className="text-green-600 hover:text-green-800">Move to Inventory</button>
+
+                        <button onClick={()=>onDelete(r)} className="text-red-600 hover:text-red-800">Delete</button>
+
+                      </div>
+
+                    </td>
+
+                  </tr>
+
+                ))}
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  )
+
+}
+
+
+
+export default MobilesStock
+
+
+
+
+
+

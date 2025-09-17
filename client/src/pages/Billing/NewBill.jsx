@@ -1063,32 +1063,39 @@ const NewBill = () => {
 
       {/* Printable Invoice */}
       <div ref={invoiceRef} className="hidden print:block p-6">
-        {/* Business Info Header */}
-        {(() => {
-          let biz = {}
-          try {
-            const raw = localStorage.getItem('mobilebill:settings')
-            if (raw) {
-              const parsed = JSON.parse(raw)
-              biz = parsed?.businessInfo || {}
-            }
-          } catch {}
-          const contactLine = [biz?.email, biz?.phone].filter(Boolean).join(' • ')
-          return (
-            <div className="text-center">
-              <div className="text-xl font-semibold">{biz?.businessName || 'Invoice'}</div>
-              {biz?.address ? <div className="text-xs text-slate-600 mt-0.5">{biz.address}</div> : null}
-              {contactLine ? <div className="text-xs text-slate-600 mt-0.5">{contactLine}</div> : null}
-              {biz?.gstin ? <div className="text-xs text-slate-600 mt-0.5">GSTIN: {biz.gstin}</div> : null}
-            </div>
-          )
-        })()}
-        <div className="mt-2 text-sm">Bill No: {billNumber} • {now.toLocaleString()}</div>
-        <div className="mt-2 text-sm">Customer: {customerName || 'Walk-in'} • {mobileNumber}</div>
+        {/* Shop Header */}
+        <div className="text-center">
+          <div className="text-2xl font-bold">Spot</div>
+          <div className="text-xs text-slate-700 mt-0.5">No.334, 7th Street, Gandhipuram, Coimbatore – 641012</div>
+          <div className="text-xs text-slate-700 mt-0.5">📞 94876 55058 | 99524 31995 | 90426 40440</div>
+          <div className="text-xs text-slate-700 mt-0.5">GSTIN: 123456789</div>
+        </div>
+
+        {/* Invoice Title */}
+        <div className="mt-3 text-center text-lg font-semibold">Invoice</div>
+
+        {/* Bill Info */}
+        <div className="mt-2 text-sm flex justify-between">
+          <div>Bill No: {billNumber}</div>
+          <div>Date: {now.toLocaleString()}</div>
+        </div>
+
+        {/* Customer Details */}
+        <div className="mt-3 text-sm">
+          <div className="font-semibold mb-1">Customer Details</div>
+          <div>Name: {customerName || '____________________'}</div>
+          <div>Phone: {mobileNumber || '_________________'}</div>
+          <div>Address: {'_________________'}</div>
+        </div>
+
+        {/* Items Table */}
         <table className="mt-4 w-full text-sm border-t border-b border-slate-300">
           <thead>
             <tr className="text-left">
               <th className="py-1 pr-2">Item</th>
+              <th className="py-1 pr-2">Model</th>
+              <th className="py-1 pr-2">IMEI / Serial No.</th>
+              <th className="py-1 pr-2">Specs</th>
               <th className="py-1 pr-2">Qty</th>
               <th className="py-1 pr-2">Price</th>
             </tr>
@@ -1104,31 +1111,24 @@ const NewBill = () => {
               const net = Math.max(gross - discount, 0)
               const gst = net * ((Number(it.gstPercent) || 0) / 100)
               const total = net + gst
-              // Check if this is a mobile with features
-              const hasMobileFeatures = it.color || it.ram || it.storage || it.processor || it.displaySize || it.camera || it.battery || it.operatingSystem || it.networkType
-              
+              const specs = [
+                it.color ? `Color: ${it.color}` : null,
+                it.ram ? `RAM: ${it.ram}` : null,
+                it.storage ? `Storage: ${it.storage}` : null,
+                it.processor ? `Processor: ${it.processor}` : null,
+                it.displaySize ? `Display: ${it.displaySize}` : null,
+                it.camera ? `Camera: ${it.camera}` : null,
+                it.battery ? `Battery: ${it.battery}` : null,
+                it.operatingSystem ? `OS: ${it.operatingSystem}` : null,
+                it.networkType ? `Network: ${it.networkType}` : null,
+              ].filter(Boolean).join(', ')
+
               return (
-                <tr key={idx} className="border-t border-slate-200">
-                  <td className="py-1 pr-2">
-                    <div>
-                      <div className="font-medium">{it.name && String(it.name).trim() ? it.name : 'Item'}</div>
-                      {it.model && <div className="text-xs text-slate-600">Model: {it.model}</div>}
-                      {it.imei && <div className="text-xs text-slate-600">IMEI: {it.imei}</div>}
-                      {hasMobileFeatures && (
-                        <div className="text-xs text-slate-600 mt-1">
-                          {it.color && <span>Color: {it.color} • </span>}
-                          {it.ram && <span>RAM: {it.ram} • </span>}
-                          {it.storage && <span>Storage: {it.storage} • </span>}
-                          {it.processor && <span>Processor: {it.processor} • </span>}
-                          {it.displaySize && <span>Display: {it.displaySize} • </span>}
-                          {it.camera && <span>Camera: {it.camera} • </span>}
-                          {it.battery && <span>Battery: {it.battery} • </span>}
-                          {it.operatingSystem && <span>OS: {it.operatingSystem} • </span>}
-                          {it.networkType && <span>Network: {it.networkType}</span>}
-                        </div>
-                      )}
-                    </div>
-                  </td>
+                <tr key={idx} className="border-t border-slate-200 align-top">
+                  <td className="py-1 pr-2 font-medium">{it.name && String(it.name).trim() ? it.name : 'Item'}</td>
+                  <td className="py-1 pr-2">{it.model || '-'}</td>
+                  <td className="py-1 pr-2">{it.imei || it.productId || '-'}</td>
+                  <td className="py-1 pr-2 max-w-xs whitespace-pre-wrap break-words">{specs || '-'}</td>
                   <td className="py-1 pr-2">{qty}</td>
                   <td className="py-1 pr-2">₹{total.toFixed(2)}</td>
                 </tr>
@@ -1136,11 +1136,49 @@ const NewBill = () => {
             })}
           </tbody>
         </table>
-        <div className="mt-2 text-right text-sm">
-          <div>Subtotal: {calc.subTotal.toFixed(2)}</div>
-          <div>CGST: {calc.cgst.toFixed(2)} • SGST: {calc.sgst.toFixed(2)}</div>
-          {calc.billLevelDiscount > 0 && <div>Bill Discount: -{calc.billLevelDiscount.toFixed(2)}</div>}
-          <div className="font-semibold text-base">Grand Total: {calc.grandTotal.toFixed(2)}</div>
+
+        {/* Summary */}
+        {(() => {
+          // Derive uniform GST percent across items, if any
+          const allItems = draftItemActive ? [...items, draftItem] : items
+          const percSet = new Set(allItems.map(it => Number(it.gstPercent) || 0))
+          const uniform = percSet.size === 1 ? [...percSet][0] : null
+          const cgstLabel = uniform != null ? `CGST (${(uniform/2).toFixed(0)}%)` : 'CGST'
+          const sgstLabel = uniform != null ? `SGST (${(uniform/2).toFixed(0)}%)` : 'SGST'
+          return (
+            <div className="mt-3 text-sm">
+              <div className="flex justify-between"><span>Subtotal:</span><span>₹{calc.subTotal.toFixed(2)}</span></div>
+              <div className="flex justify-between"><span>{cgstLabel}:</span><span>₹{calc.cgst.toFixed(2)}</span></div>
+              <div className="flex justify-between"><span>{sgstLabel}:</span><span>₹{calc.sgst.toFixed(2)}</span></div>
+              {calc.billLevelDiscount > 0 && (
+                <div className="flex justify-between"><span>Bill Discount:</span><span>- ₹{calc.billLevelDiscount.toFixed(2)}</span></div>
+              )}
+              <div className="mt-1 pt-2 border-t border-slate-300 flex justify-between font-semibold text-base"><span>Grand Total:</span><span>₹{calc.grandTotal.toFixed(2)}</span></div>
+            </div>
+          )
+        })()}
+
+        {/* Payment Details */}
+        <div className="mt-4 text-sm">
+          <div className="font-semibold mb-1">Payment Details</div>
+          <div>Mode: {paymentMethod || '____________________'}</div>
+          <div>Transaction ID: {'______________'}</div>
+        </div>
+
+        {/* Terms & Conditions */}
+        <div className="mt-4 text-sm">
+          <div className="font-semibold mb-1">Terms & Conditions</div>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>Goods once sold will not be taken back or exchanged.</li>
+            <li>Warranty as per manufacturer’s policy.</li>
+            <li>Please retain this invoice for future warranty/service.</li>
+          </ul>
+        </div>
+
+        {/* Footer */}
+        <div className="mt-6 text-sm flex justify-between items-center">
+          <div className="italic">💡 Thank you for shopping at Spot!</div>
+          <div>Authorized Signatory ___________________</div>
         </div>
       </div>
     </div>
