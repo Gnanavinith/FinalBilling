@@ -698,24 +698,18 @@ const AddPurchase = () => {
                   type="text"
                   value={newItem.category === 'Accessories' ? newItem.productId : newItem.model}
                   onChange={(e) => {
-<<<<<<< HEAD
                     const val = e.target.value
-                    setNewItem(prev => ({ ...prev, model: val }))
+                    setNewItem(prev => {
+                      const next = { ...prev }
+                      if (prev.category === 'Accessories') {
+                        next.productId = val
+                        next.model = val
+                      } else {
+                        next.model = val
+                      }
+                      return next
+                    })
                   }}
-=======
-                      const val = e.target.value
-                      setNewItem(prev => {
-                        const next = { ...prev }
-                        if (prev.category === 'Accessories') {
-                          next.productId = val
-                          next.model = val // For accessories, model is the same as productId
-                        } else {
-                          next.model = val
-                        }
-                        return next
-                      })
-                    }}
->>>>>>> 40aa0339640b45c58a0518a12cb4118d06c81e2e
                   className="w-full rounded-xl border-2 border-slate-200 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100 transition-all px-4 py-2.5"
                   placeholder={newItem.category === 'Accessories' ? 'e.g., ACC-EAR-5632' : 'e.g., Y21 (optional)'}
                 />
@@ -726,7 +720,6 @@ const AddPurchase = () => {
                 )}
               </div>
 
-<<<<<<< HEAD
               {/* Product ID only for Accessories */}
               {newItem.category === 'Accessories' && (
               <div>
@@ -740,8 +733,7 @@ const AddPurchase = () => {
                 />
               </div>
               )}
-=======
->>>>>>> 40aa0339640b45c58a0518a12cb4118d06c81e2e
+
 
               {newItem.category === 'Mobile' && (
                 <>

@@ -40,33 +40,6 @@ const NewBill = () => {
   const [billNumber] = useState(() => `INV-${Date.now().toString().slice(-6)}`)
   const invoiceRef = useRef(null)
   const [lookupLoading, setLookupLoading] = useState(false)
-<<<<<<< HEAD
-  const [accessorySuggestions, setAccessorySuggestions] = useState([])
-  // Exclude sold codes from suggestions
-  const soldAccessoryCodes = useMemo(() => new Set(['ARA-ACC-ONE-0000', 'ARA-ACC-ONE-0001']), [])
-  const generateAccessoryCodes = (prefix, count = 100) => Array.from({ length: count }, (_, i) => `${prefix}-${String(i + 1).padStart(4, '0')}`)
-  const resolveAccessoryPrefix = (term) => {
-    const parts = term.split('-').filter(Boolean)
-    if (parts.length >= 3 && parts[0] === 'ARA' && parts[1] === 'ACC') {
-      return `${parts[0]}-${parts[1]}-${parts[2]}`
-    }
-    // If user typed only the model code like BAC
-    if (/^[A-Z0-9]{2,}$/i.test(term)) {
-      return `ARA-ACC-${term}`.toUpperCase()
-    }
-    return 'ARA-ACC-ONE'
-  }
-  const fetchAccessorySuggestions = (raw) => {
-    const term = String(raw || '').trim().replace(/_/g, '-').toUpperCase()
-    if (!term) { setAccessorySuggestions([]); return }
-    const prefix = resolveAccessoryPrefix(term)
-    const codeList = generateAccessoryCodes(prefix, 100)
-    const matches = codeList
-      .filter(code => code.includes(term) && !soldAccessoryCodes.has(code))
-      .slice(0, 10)
-    setAccessorySuggestions(matches)
-  }
-=======
   
   // Auto-completion states
   const [productSuggestions, setProductSuggestions] = useState([])
@@ -76,7 +49,6 @@ const NewBill = () => {
   const [allProducts, setAllProducts] = useState([])
   const [allMobiles, setAllMobiles] = useState([])
   const [allAccessories, setAllAccessories] = useState([])
->>>>>>> 40aa0339640b45c58a0518a12cb4118d06c81e2e
 
   const removeItem = (index) => setItems(prev => prev.filter((_, i) => i !== index))
 
@@ -374,7 +346,6 @@ const NewBill = () => {
       return
     }
     
-    // Prevent multiple simultaneous calls
     if (lookupLoading) {
       return
     }
@@ -387,81 +358,6 @@ const NewBill = () => {
         if (res.ok) {
           const data = await res.json()
           if (data?.type === 'accessory') {
-<<<<<<< HEAD
-            // Build item from lookup, add to bill, then print
-            const newItem = {
-              ...draftItem,
-              type: 'Accessory',
-              name: data.name || draftItem.name,
-              price: Number(data.sellingPrice ?? data.unitPrice) || draftItem.price,
-              productId: pid,
-              imei: '',
-              model: '',
-            }
-            setDraftItem(newItem)
-          return
-        }
-          if (data?.type === 'mobile') {
-            const newItem = {
-              ...draftItem,
-              type: 'Mobile',
-              name: data.name || draftItem.name,
-              price: Number(data.sellingPrice ?? data.pricePerProduct) || draftItem.price,
-              productId: pid,
-              imei: '',
-              model: data.model || draftItem.model,
-              color: data.features?.color || draftItem.color,
-              ram: data.features?.ram || draftItem.ram,
-              storage: data.features?.storage || draftItem.storage,
-              simSlot: data.features?.simSlot || draftItem.simSlot,
-              processor: data.features?.processor || draftItem.processor,
-              displaySize: data.features?.displaySize || draftItem.displaySize,
-              camera: data.features?.camera || draftItem.camera,
-              battery: data.features?.battery || draftItem.battery,
-              operatingSystem: data.features?.operatingSystem || draftItem.operatingSystem,
-              networkType: data.features?.networkType || draftItem.networkType,
-            }
-            setDraftItem(newItem)
-      return
-    }
-        }
-        // If not found via productId, fall through to IMEI for mobiles
-      }
-    const imei = String(draftItem.imei || '').trim()
-      if (imei) {
-      const mobRes = await fetch(`${apiBase}/api/mobiles`)
-      const mobiles = await mobRes.json()
-      const mobile = Array.isArray(mobiles) ? mobiles.find(m => m.imeiNumber1 === imei || m.imeiNumber2 === imei) : null
-      if (mobile) {
-          const newItem = {
-            ...draftItem,
-            type: 'Mobile',
-            name: mobile.mobileName || draftItem.name,
-            price: Number((mobile.sellingPrice ?? mobile.pricePerProduct)) || draftItem.price,
-          imei: imei,
-          // Treat IMEI as Product ID for billing
-          productId: imei,
-            model: mobile.modelNumber || draftItem.model,
-            color: mobile.color || draftItem.color,
-            ram: mobile.ram || draftItem.ram,
-            storage: mobile.storage || draftItem.storage,
-            simSlot: mobile.simSlot || draftItem.simSlot,
-            processor: mobile.processor || draftItem.processor,
-            displaySize: mobile.displaySize || draftItem.displaySize,
-            camera: mobile.camera || draftItem.camera,
-            battery: mobile.battery || draftItem.battery,
-            operatingSystem: mobile.operatingSystem || draftItem.operatingSystem,
-            networkType: mobile.networkType || draftItem.networkType
-          }
-          setDraftItem(newItem)
-        return
-      }
-      alert('No mobile found with this IMEI')
-        return
-      }
-      // Do nothing if neither Product ID nor IMEI is provided
-=======
-            // Keep current quantity and billing fields
             const currentQuantity = draftItem.quantity || 1
             const currentGstPercent = draftItem.gstPercent || 18
             const currentDiscountType = draftItem.discountType || 'percent'
@@ -471,14 +367,13 @@ const NewBill = () => {
               type: 'Accessory',
               name: data.name || '',
               productId: pid,
-              imei: '', // Accessories don't have IMEI
-              model: pid, // For accessories, model is the same as productId
-              quantity: currentQuantity, // Keep current quantity
+              imei: '',
+              model: pid,
+              quantity: currentQuantity,
               price: Number(data.sellingPrice ?? data.unitPrice) || 0,
-              gstPercent: currentGstPercent, // Keep current GST
-              discountType: currentDiscountType, // Keep current discount type
-              discountValue: currentDiscountValue, // Keep current discount value
-              // Mobile features (not applicable for accessories)
+              gstPercent: currentGstPercent,
+              discountType: currentDiscountType,
+              discountValue: currentDiscountValue,
               color: '',
               ram: '',
               storage: '',
@@ -493,7 +388,6 @@ const NewBill = () => {
             return
           }
           if (data?.type === 'mobile') {
-            // Keep current quantity and billing fields
             const currentQuantity = draftItem.quantity || 1
             const currentGstPercent = draftItem.gstPercent || 18
             const currentDiscountType = draftItem.discountType || 'percent'
@@ -503,14 +397,13 @@ const NewBill = () => {
               type: 'Mobile',
               name: data.name || '',
               productId: pid,
-              imei: '', // Will be filled from IMEI lookup if needed
+              imei: '',
               model: data.model || '',
-              quantity: currentQuantity, // Keep current quantity
+              quantity: currentQuantity,
               price: Number(data.sellingPrice ?? data.pricePerProduct) || 0,
-              gstPercent: currentGstPercent, // Keep current GST
-              discountType: currentDiscountType, // Keep current discount type
-              discountValue: currentDiscountValue, // Keep current discount value
-              // Mobile features - fetch all available data
+              gstPercent: currentGstPercent,
+              discountType: currentDiscountType,
+              discountValue: currentDiscountValue,
               color: data.features?.color || '',
               ram: data.features?.ram || '',
               storage: data.features?.storage || '',
@@ -533,7 +426,6 @@ const NewBill = () => {
         const mobiles = await mobRes.json()
         const mobile = Array.isArray(mobiles) ? mobiles.find(m => m.imeiNumber1 === imei || m.imeiNumber2 === imei) : null
         if (mobile) {
-          // Keep current quantity and billing fields
           const currentQuantity = draftItem.quantity || 1
           const currentGstPercent = draftItem.gstPercent || 18
           const currentDiscountType = draftItem.discountType || 'percent'
@@ -542,15 +434,14 @@ const NewBill = () => {
           setDraftItem({
             type: 'Mobile',
             name: mobile.mobileName || '',
-            productId: mobile.productIds?.[0] || '', // Use first product ID if available
+            productId: mobile.productIds?.[0] || '',
             imei: imei,
             model: mobile.modelNumber || '',
-            quantity: currentQuantity, // Keep current quantity
+            quantity: currentQuantity,
             price: Number((mobile.sellingPrice ?? mobile.pricePerProduct)) || 0,
-            gstPercent: currentGstPercent, // Keep current GST
-            discountType: currentDiscountType, // Keep current discount type
-            discountValue: currentDiscountValue, // Keep current discount value
-            // Mobile features - fetch all available data
+            gstPercent: currentGstPercent,
+            discountType: currentDiscountType,
+            discountValue: currentDiscountValue,
             color: mobile.color || '',
             ram: mobile.ram || '',
             storage: mobile.storage || '',
@@ -568,9 +459,7 @@ const NewBill = () => {
         return
       }
       
-      // If neither Product ID nor IMEI found anything
       alert('No product found with the provided Product ID or IMEI')
->>>>>>> 40aa0339640b45c58a0518a12cb4118d06c81e2e
     } catch (error) {
       console.error('Lookup failed:', error)
       alert('Failed to lookup product details')
@@ -814,37 +703,6 @@ const NewBill = () => {
                 <div>
                   <label className="text-sm font-semibold text-slate-700 mb-2 block flex items-center gap-2"><MdSearch /> IMEI Number or Product ID</label>
                   <div className="flex gap-3">
-<<<<<<< HEAD
-                    <input 
-                      value={draftItem.imei} 
-                      onChange={e => setDraftItem({ ...draftItem, imei: e.target.value })} 
-                      onBlur={lookupByImeiOrProduct}
-                      onKeyDown={(e)=>{ if(e.key==='Enter'){ e.preventDefault(); lookupByImeiOrProduct(); } }}
-                      autoFocus
-                      autoComplete="off"
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      className="flex-1 rounded-xl border-2 border-blue-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-200 px-4 py-3 bg-white shadow-sm" 
-                      placeholder="Enter/Scan IMEI or type Product ID and press Enter" 
-                    />
-                    <div className="flex-1 relative">
-                    <input 
-                      value={draftItem.productId}
-                        onChange={e => { const v = e.target.value; setDraftItem({ ...draftItem, productId: v }); fetchAccessorySuggestions(v) }}
-                        onBlur={() => setTimeout(()=>setAccessorySuggestions([]), 150)}
-                        className="w-full rounded-xl border-2 border-purple-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all duration-200 px-4 py-3 bg-white shadow-sm" 
-                        placeholder="Or enter Product ID (e.g., ARA-ACC-ONE)" 
-                      />
-                      {accessorySuggestions.length > 0 && (
-                        <div className="absolute z-20 mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-lg max-h-64 overflow-auto">
-                          {accessorySuggestions.map((code, i) => (
-                            <button key={i} type="button" onMouseDown={(e)=>e.preventDefault()} onClick={()=>{
-                              setDraftItem(prev => ({ ...prev, productId: code }))
-                              setAccessorySuggestions([])
-                            }} className="w-full text-left px-3 py-2 hover:bg-slate-50">
-                              <div className="text-sm font-medium text-slate-800">{code}</div>
-                            </button>
-=======
                     <div className="flex-1 relative">
                       <input 
                         value={draftItem.imei} 
@@ -865,8 +723,6 @@ const NewBill = () => {
                         className="w-full rounded-xl border-2 border-blue-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-200 px-4 py-3 bg-white shadow-sm" 
                         placeholder="Enter/Scan IMEI or type Product ID and press Enter" 
                       />
-                      
-                      {/* IMEI Suggestions */}
                       {showImeiSuggestions && imeiSuggestions.length > 0 && (
                         <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto">
                           {imeiSuggestions.map((product, index) => (
@@ -889,14 +745,10 @@ const NewBill = () => {
                                 </div>
                               </div>
                             </div>
->>>>>>> 40aa0339640b45c58a0518a12cb4118d06c81e2e
                           ))}
                         </div>
                       )}
                     </div>
-<<<<<<< HEAD
-=======
-                    
                     <div className="flex-1 relative">
                       <input 
                         value={draftItem.productId}
@@ -913,8 +765,6 @@ const NewBill = () => {
                         placeholder="Or enter Product ID (e.g., VIV-MOB-Y21-0001)" 
                       />
                     </div>
-                    
->>>>>>> 40aa0339640b45c58a0518a12cb4118d06c81e2e
                     <button 
                       type="button"
                       onClick={lookupByImeiOrProduct}
@@ -929,29 +779,6 @@ const NewBill = () => {
                 <div>
                   <label className="text-sm font-semibold text-slate-700 mb-2 block flex items-center gap-2"><MdSearch /> Product ID</label>
                   <div className="flex gap-3">
-<<<<<<< HEAD
-                  <div className="relative">
-                    <input 
-                      value={draftItem.productId} 
-                      onChange={e => { const v=e.target.value; setDraftItem({ ...draftItem, productId: v }); fetchAccessorySuggestions(v) }} 
-                      onBlur={() => setTimeout(()=>setAccessorySuggestions([]), 150)}
-                      className="w-full rounded-xl border-2 border-purple-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all duration-200 px-4 py-3 bg-white shadow-sm" 
-                      placeholder="Enter Product ID prefix (e.g., ARA-ACC-ONE)" 
-                    />
-                    {accessorySuggestions.length > 0 && (
-                      <div className="absolute z-20 mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-lg max-h-64 overflow-auto">
-                        {accessorySuggestions.map((code, i) => (
-                          <button key={i} type="button" onMouseDown={(e)=>e.preventDefault()} onClick={()=>{
-                            setDraftItem(prev => ({ ...prev, productId: code }))
-                            setAccessorySuggestions([])
-                          }} className="w-full text-left px-3 py-2 hover:bg-slate-50">
-                            <div className="text-sm font-medium text-slate-800">{code}</div>
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-=======
                     <div className="flex-1 relative">
                       <input 
                         value={draftItem.productId} 
@@ -995,7 +822,6 @@ const NewBill = () => {
                       )}
                     </div>
                     
->>>>>>> 40aa0339640b45c58a0518a12cb4118d06c81e2e
                     <button 
                       type="button"
                       onClick={lookupByImeiOrProduct}

@@ -5,11 +5,7 @@ const apiBase = 'http://localhost:5000'
 const MobilesStock = () => {
   const [rows, setRows] = useState([])
   const [dealers, setDealers] = useState([])
-<<<<<<< HEAD
   const [q, setQ] = useState({ dealerId: '', modelNumber: '', imei: '' })
-=======
-  const [q, setQ] = useState({ dealerId: '', modelNumber: '' })
->>>>>>> 40aa0339640b45c58a0518a12cb4118d06c81e2e
   const [form, setForm] = useState({
     mobileName: '',
     brand: '',
@@ -82,15 +78,10 @@ const MobilesStock = () => {
 
   const filtered = useMemo(() => {
     const list = rows.filter(r => (Number(r.totalQuantity)||0) > 0)
-<<<<<<< HEAD
     const imei = String(q.imei||'').trim()
     if (!imei) return list
     return list.filter(r => String(r.imeiNumber1||'').includes(imei) || String(r.imeiNumber2||'').includes(imei))
   }, [rows, q.imei])
-=======
-    return list
-  }, [rows])
->>>>>>> 40aa0339640b45c58a0518a12cb4118d06c81e2e
 
   const submit = async (e) => {
     e.preventDefault()
@@ -173,10 +164,6 @@ const MobilesStock = () => {
   const moveToInventory = async (row) => {
     if (!confirm(`Move ${row.mobileName} (${row.modelNumber}) to Inventory?`)) return
     try {
-<<<<<<< HEAD
-      alert(`${row.mobileName} is now available in Inventory! Redirecting...`)
-      window.location.href = '/inventory/mobiles'
-=======
       // Delete the record from stock update list since it's now moved to inventory
       const res = await fetch(`${apiBase}/api/mobiles/${row.id}`, { method: 'DELETE' })
       if (!res.ok) {
@@ -185,7 +172,6 @@ const MobilesStock = () => {
       }
       await load() // Refresh the list
       alert(`${row.mobileName} has been moved to Inventory! You can view it in the Inventory section.`)
->>>>>>> 40aa0339640b45c58a0518a12cb4118d06c81e2e
     } catch (ex) { 
       alert('Error moving to inventory: ' + ex.message) 
     }
@@ -420,10 +406,7 @@ const MobilesStock = () => {
               {dealers.map(d=> <option key={d.id} value={d.id}>{d.name}</option>)}
             </select>
             <input placeholder="Model Number" className="rounded-xl border-2 border-slate-200 px-3 py-2 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100 transition-all" value={q.modelNumber} onChange={e=>setQ({...q, modelNumber:e.target.value})} />
-<<<<<<< HEAD
             <input placeholder="IMEI" className="rounded-xl border-2 border-slate-200 px-3 py-2 focus:border-purple-400 focus:ring-4 focus:ring-purple-100 transition-all" value={q.imei} onChange={e=>setQ({...q, imei:e.target.value})} />
-=======
->>>>>>> 40aa0339640b45c58a0518a12cb4118d06c81e2e
             <button onClick={load} className="px-4 py-2.5 rounded-xl border-2 border-slate-300 hover:bg-slate-50 transition-all">Filter</button>
             <button onClick={load} className="px-4 py-2.5 rounded-xl bg-blue-500 text-white hover:bg-blue-600 transition-all">Refresh</button>
           </div>
@@ -439,10 +422,6 @@ const MobilesStock = () => {
                   <th className="py-2 pr-4">IMEI1</th>
                   <th className="py-2 pr-4">IMEI2</th>
                   <th className="py-2 pr-4">Dealer</th>
-<<<<<<< HEAD
-                  <th className="py-2 pr-4">IMEI</th>
-=======
->>>>>>> 40aa0339640b45c58a0518a12cb4118d06c81e2e
                   <th className="py-2 pr-4">Cost</th>
                   <th className="py-2 pr-4">Sell</th>
                   <th className="py-2 pr-4">Qty</th>
@@ -460,10 +439,6 @@ const MobilesStock = () => {
                     <td className="py-2 pr-4">{r.imeiNumber1}</td>
                     <td className="py-2 pr-4">{r.imeiNumber2 || '-'}</td>
                     <td className="py-2 pr-4">{r.dealerName}</td>
-<<<<<<< HEAD
-                    <td className="py-2 pr-4">{r.imeiNumber1 || '-'}</td>
-=======
->>>>>>> 40aa0339640b45c58a0518a12cb4118d06c81e2e
                     <td className="py-2 pr-4">{r.pricePerProduct}</td>
                     <td className="py-2 pr-4">{r.sellingPrice || '-'}</td>
                     <td className="py-2 pr-4">{r.totalQuantity}</td>

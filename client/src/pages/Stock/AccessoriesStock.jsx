@@ -94,12 +94,6 @@ const AccessoriesStock = () => {
   const moveToInventory = async (row) => {
     if (!confirm(`Move ${row.productName} (${row.productId}) to Inventory?`)) return
     try {
-<<<<<<< HEAD
-      alert(`${row.productName} is now available in Inventory! Redirecting...`)
-      window.location.href = '/inventory/accessories'
-    } catch (ex) {
-      alert('Error moving to inventory: ' + (ex?.message || ex))
-=======
       // Delete the record from stock update list since it's now moved to inventory
       const res = await fetch(`${apiBase}/api/accessories/${row.id}`, { method: 'DELETE' })
       if (!res.ok) {
@@ -110,7 +104,6 @@ const AccessoriesStock = () => {
       alert(`${row.productName} has been moved to Inventory! You can view it in the Inventory section.`)
     } catch (ex) { 
       alert('Error moving to inventory: ' + ex.message) 
->>>>>>> 40aa0339640b45c58a0518a12cb4118d06c81e2e
     }
   }
 
