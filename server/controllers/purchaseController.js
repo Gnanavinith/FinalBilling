@@ -1,6 +1,7 @@
 const Purchase = require('../models/Purchase')
 const Dealer = require('../models/Dealer')
 const Mobile = require('../models/Mobile')
+const BrandModel = require('../models/BrandModel')
 const Accessory = require('../models/Accessory')
 const ProductCounter = require('../models/ProductCounter')
 
@@ -143,20 +144,46 @@ exports.receivePurchase = async (req, res) => {
         console.log('Existing mobile found:', !!existing)
         const modelCode = productCodeFromName(item.model || item.productName)
         const key = `${dealerCode}-${categoryCode}-${modelCode}`
-        const imeis = Array.isArray(item.imeiList) ? item.imeiList.map(s => String(s||'').trim()).filter(Boolean) : []
+        // Build IMEI list from fields provided in the Add Purchase form
+        const imeisFromList = Array.isArray(item.imeiList) ? item.imeiList : []
+        const imeisRaw = [
+          item.imeiNumber1,
+          item.imeiNumber2,
+          ...imeisFromList,
+        ]
+        const imeis = imeisRaw
+          .map(s => (s == null ? '' : String(s)).trim())
+          .filter(Boolean)
+          .filter((v, i, a) => a.indexOf(v) === i) // unique
         const qty = Math.max(0, Number(item.quantity) || 0)
 
-        // 1) Create one Mobile doc per IMEI so billing can scan IMEI
-        for (const im of imeis) {
+        // Resolve brand from input, BrandModel by model, or product name as fallback
+        let brandResolved = String(item.brand || '').trim()
+        if (!brandResolved) {
+          try {
+            if (item.model && String(item.model).trim()) {
+              const bm = await BrandModel.findOne({ $or: [{ model: item.model }, { aliases: item.model }] })
+              if (bm && bm.brand) brandResolved = bm.brand
+            }
+          } catch {}
+        }
+        if (!brandResolved) {
+          const words = String(item.productName || '').trim().split(/\s+/)
+          brandResolved = words.length > 0 ? words[0] : ''
+        }
+
+        // 1) Create mobile docs for provided IMEIs.
+        // If exactly two IMEIs provided and quantity is 1, store both IMEIs on a single record.
+        if (qty === 1 && imeis.length === 2) {
           const counter = await nextCounter(key)
           const pid = `${dealerCode}-${categoryCode}-${modelCode}-${String(counter).padStart(4, '0')}`
-          const perImei = {
+          const dualImei = {
             id: `MOB-${String(Date.now())}-${Math.floor(Math.random()*1000)}-${Math.floor(Math.random()*1000)}`,
             mobileName: item.productName || 'Mobile',
-            brand: '',
+            brand: brandResolved,
             modelNumber: item.model && item.model.trim() ? item.model.trim() : 'Unknown',
-            imeiNumber1: String(im),
-            imeiNumber2: undefined,
+            imeiNumber1: String(imeis[0]),
+            imeiNumber2: String(imeis[1]),
             dealerId: purchase.dealerId,
             dealerName,
             pricePerProduct: Number(item.purchasePrice) || 0,
@@ -166,22 +193,61 @@ exports.receivePurchase = async (req, res) => {
             color: item.color || '',
             ram: item.ram || '',
             storage: item.storage || '',
-            simSlot: '',
-            processor: '',
-            displaySize: '',
-            camera: '',
-            battery: '',
-            operatingSystem: '',
-            networkType: '',
+            simSlot: item.simSlot || '',
+            processor: item.processor || '',
+            displaySize: item.displaySize || '',
+            camera: item.camera || '',
+            battery: item.battery || '',
+            operatingSystem: item.operatingSystem || '',
+            networkType: item.networkType || '',
           }
           try {
-            await Mobile.create(perImei)
+            await Mobile.create(dualImei)
           } catch (err) {
             if (!(err && err.code === 11000)) throw err
-            // In case IMEI duplicates, store without IMEIs
-            perImei.imeiNumber1 = undefined
-            perImei.imeiNumber2 = undefined
-            await Mobile.create(perImei)
+            // fallback without IMEIs if uniqueness conflicts
+            dualImei.imeiNumber1 = undefined
+            dualImei.imeiNumber2 = undefined
+            await Mobile.create(dualImei)
+          }
+        } else {
+          // Otherwise, one record per IMEI (or none if not provided)
+          for (const im of imeis) {
+            const counter = await nextCounter(key)
+            const pid = `${dealerCode}-${categoryCode}-${modelCode}-${String(counter).padStart(4, '0')}`
+            const perImei = {
+              id: `MOB-${String(Date.now())}-${Math.floor(Math.random()*1000)}-${Math.floor(Math.random()*1000)}`,
+              mobileName: item.productName || 'Mobile',
+              brand: brandResolved,
+              modelNumber: item.model && item.model.trim() ? item.model.trim() : 'Unknown',
+              imeiNumber1: String(im),
+              imeiNumber2: undefined,
+              dealerId: purchase.dealerId,
+              dealerName,
+              pricePerProduct: Number(item.purchasePrice) || 0,
+              sellingPrice: Number(item.sellingPrice) || Number(item.purchasePrice) || 0,
+              totalQuantity: 1,
+              productIds: [pid],
+              color: item.color || '',
+              ram: item.ram || '',
+              storage: item.storage || '',
+              simSlot: item.simSlot || '',
+              processor: item.processor || '',
+              displaySize: item.displaySize || '',
+              camera: item.camera || '',
+              battery: item.battery || '',
+              operatingSystem: item.operatingSystem || '',
+              networkType: item.networkType || '',
+            }
+            try {
+              await Mobile.create(perImei)
+            } catch (err) {
+              if (!(err && err.code === 11000)) throw err
+              // In case IMEI duplicates, store without IMEIs
+              perImei.imeiNumber1 = undefined
+              perImei.imeiNumber2 = undefined
+              await Mobile.create(perImei)
+            }
           }
         }
 
@@ -200,6 +266,7 @@ exports.receivePurchase = async (req, res) => {
               existing.productIds.push(pid)
             }
             existing.totalQuantity = (Number(existing.totalQuantity)||0) + remaining
+            if (brandResolved) existing.brand = brandResolved
             if (item.color) existing.color = item.color
             if (item.ram) existing.ram = item.ram
             if (item.storage) existing.storage = item.storage
@@ -220,7 +287,7 @@ exports.receivePurchase = async (req, res) => {
             const payload = {
               id: `MOB-${String(Date.now())}-${Math.floor(Math.random()*1000)}`,
               mobileName: item.productName || 'Mobile',
-              brand: '',
+              brand: brandResolved,
               modelNumber: item.model && item.model.trim() ? item.model.trim() : 'Unknown',
               dealerId: purchase.dealerId,
               dealerName,
@@ -231,13 +298,13 @@ exports.receivePurchase = async (req, res) => {
               color: item.color || '',
               ram: item.ram || '',
               storage: item.storage || '',
-              simSlot: '',
-              processor: '',
-              displaySize: '',
-              camera: '',
-              battery: '',
-              operatingSystem: '',
-              networkType: '',
+              simSlot: item.simSlot || '',
+              processor: item.processor || '',
+              displaySize: item.displaySize || '',
+              camera: item.camera || '',
+              battery: item.battery || '',
+              operatingSystem: item.operatingSystem || '',
+              networkType: item.networkType || '',
             }
             await Mobile.create(payload)
           }

@@ -50,7 +50,12 @@ const Mobiles = () => {
       const res = await fetch(`${apiBase}/api/mobiles`)
       const data = await res.json()
       const rows = Array.isArray(data) ? data : []
-      const mapped = rows.map(r => ({
+      
+      // Filter to only show items that ARE in inventory (status === 'inventory')
+      const inventoryItems = rows.filter(item => item.status === 'inventory')
+      console.log('Inventory items found:', inventoryItems.length)
+      console.log('Sample inventory item:', inventoryItems[0])
+      const mapped = inventoryItems.map(r => ({
         id: r.id,
         category: 'Mobile',
         productName: r.mobileName,
@@ -60,14 +65,23 @@ const Mobiles = () => {
         ram: r.ram || '',
         storage: r.storage || '',
         processor: r.processor || '',
+        displaySize: r.displaySize || '',
+        camera: r.camera || '',
+        battery: r.battery || '',
+        operatingSystem: r.operatingSystem || '',
+        networkType: r.networkType || '',
+        simSlot: r.simSlot || '',
         productIds: Array.isArray(r.productIds) ? r.productIds : [],
-        imei1: r.imeiNumber1 || '',
-        imei2: r.imeiNumber2 || '',
+        imei1: r.imeiNumber1 || null,
+        imei2: r.imeiNumber2 || null,
         stock: Number(r.totalQuantity) || 0,
         purchasePrice: Number(r.pricePerProduct) || 0,
         sellingPrice: Number(r.sellingPrice ?? r.pricePerProduct) || 0,
+        dealerName: r.dealerName || '',
         createdAt: r.createdAt || new Date().toISOString(),
+        updatedAt: r.updatedAt || r.createdAt || new Date().toISOString(),
       }))
+      console.log('Mapped inventory data:', mapped[0])
       setInventory(mapped)
       // initial options from full dataset
       const brands = Array.from(new Set(mapped.map(x => x.brand).filter(Boolean))).sort()
@@ -359,7 +373,8 @@ const Mobiles = () => {
                 <th className="py-3 px-4"><div className="flex items-center gap-1"><FiTag className="w-4 h-4" /> Product Name</div></th>
                 <th className="py-3 px-4"><div className="flex items-center gap-1"><FiTag className="w-4 h-4" /> Brand</div></th>
                 <th className="py-3 px-4"><div className="flex items-center gap-1"><FiSmartphone className="w-4 h-4" /> Model/Variant</div></th>
-                <th className="py-3 px-4"><div className="flex items-center gap-1"><FiTag className="w-4 h-4" /> IMEI</div></th>
+                <th className="py-3 px-4 w-48"><div className="flex items-center gap-1"><FiTag className="w-4 h-4" /> IMEI</div></th>
+                <th className="py-3 px-4">Features</th>
                 <th className="py-3 px-4">Remaining Stock</th>
                 <th className="py-3 px-4"><div className="flex items-center gap-1"><FiDollarSign className="w-4 h-4" /> Purchase Price</div></th>
                 <th className="py-3 px-4"><div className="flex items-center gap-1"><FiDollarSign className="w-4 h-4" /> Stock Value</div></th>
@@ -380,13 +395,44 @@ const Mobiles = () => {
                   const stockStatus = getStockStatus(item.remainingStock)
                   const StockIcon = stockStatus.icon
                   const stockValue = item.remainingStock * item.purchasePrice
+                  const lastUpdated = item.updatedAt ? new Date(item.updatedAt).toLocaleDateString() : new Date(item.createdAt).toLocaleDateString()
+
+                  // Debug logging
+                  console.log('Rendering item:', item.productName, 'Brand:', item.brand, 'IMEI1:', item.imei1, 'IMEI2:', item.imei2)
 
                   return (
                     <tr key={item.id} className="border-b border-slate-100 hover:bg-slate-50">
-                      <td className="py-3 px-4 font-medium">{item.productName}</td>
-                      <td className="py-3 px-4">{item.brand || '-'}</td>
-                      <td className="py-3 px-4">{item.model}</td>
-                      <td className="py-3 px-4">{item.imei1 || '-'}</td>
+                      <td className="py-3 px-4">
+                        <div className="font-medium text-slate-900">{item.productName}</div>
+                        <div className="text-xs text-slate-500">{item.dealerName}</div>
+                      </td>
+                      <td className="py-3 px-4">
+                        <span className="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">
+                          {item.brand && item.brand.trim() ? item.brand : 'No Brand'}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="font-medium">{item.model}</div>
+                        {item.color && (
+                          <div className="text-xs text-slate-500">Color: {item.color}</div>
+                        )}
+                      </td>
+                      <td className="py-3 px-4 w-48">
+                        <div className="font-mono text-xs">
+                          <div>{item.imei1 ? item.imei1 : '-'}</div>
+                          {item.imei2 ? (
+                            <div className="text-slate-500">{item.imei2}</div>
+                          ) : null}
+                        </div>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="text-xs space-y-1">
+                          {item.ram && <div>RAM: {item.ram}</div>}
+                          {item.storage && <div>Storage: {item.storage}</div>}
+                          {item.processor && <div>CPU: {item.processor}</div>}
+                          {item.displaySize && <div>Display: {item.displaySize}</div>}
+                        </div>
+                      </td>
                       <td className="py-3 px-4">
                         <span className={`px-2 py-1 text-xs rounded-full font-medium ${
                           item.remainingStock <= 0 
@@ -398,8 +444,12 @@ const Mobiles = () => {
                           {item.remainingStock}
                         </span>
                       </td>
-                      <td className="py-3 px-4">₹{item.purchasePrice.toFixed(2)}</td>
-                      <td className="py-3 px-4">₹{stockValue.toFixed(2)}</td>
+                      <td className="py-3 px-4">
+                        <span className="font-medium">₹{item.purchasePrice.toFixed(2)}</span>
+                      </td>
+                      <td className="py-3 px-4">
+                        <span className="font-medium text-green-600">₹{stockValue.toFixed(2)}</span>
+                      </td>
                       <td className="py-3 px-4">
                         <span className={`inline-flex items-center space-x-1 px-2 py-1 text-xs rounded-full ${stockStatus.color}`}>
                           <StockIcon className="w-3 h-3" />
@@ -407,7 +457,7 @@ const Mobiles = () => {
                         </span>
                       </td>
                       <td className="py-3 px-4 text-slate-500">
-                        {new Date(item.createdAt).toLocaleDateString()}
+                        {lastUpdated}
                       </td>
                       <td className="py-3 px-4">
                         <button onClick={()=>downloadStatement(item)} className="px-2 py-1 text-xs rounded-md border hover:bg-slate-50 inline-flex items-center gap-1"><FiDownload className="w-3 h-3" /> Download</button>

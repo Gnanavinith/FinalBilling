@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { FiPlus, FiTrash2, FiSave } from 'react-icons/fi'
 
-const apiBase = ''
+// Resolve API base: in Electron packaged app, backend is on localhost:5000; in dev use Vite proxy with empty base
+const apiBase = (typeof window !== 'undefined' && window?.process?.versions?.electron) ? 'http://localhost:5000' : ''
 const generateInvoiceNumber = () => {
   const now = new Date()
   const yy = String(now.getFullYear()).slice(-2)
@@ -155,19 +156,32 @@ const AddPurchase = () => {
     const [isCustom, setIsCustom] = useState(false)
     const [customValue, setCustomValue] = useState("")
 
+    // Update customValue when value changes from outside
+    useEffect(() => {
+      if (value && !options.includes(value)) {
+        setIsCustom(true)
+        setCustomValue(value)
+      } else if (value && options.includes(value)) {
+        setIsCustom(false)
+        setCustomValue("")
+      }
+    }, [value, options])
+
     const handleSelectChange = (e) => {
       const selectedValue = e.target.value
       if (selectedValue === 'Other') {
         setIsCustom(true)
-        setCustomValue(value)
+        setCustomValue(value || "")
       } else {
         setIsCustom(false)
+        setCustomValue("")
         onChange(selectedValue)
       }
     }
 
     const handleCustomInputChange = (e) => {
       const inputValue = e.target.value
+      console.log('DropdownWithInput custom input change:', inputValue)
       setCustomValue(inputValue)
       onChange(inputValue)
     }
@@ -676,6 +690,7 @@ const AddPurchase = () => {
                     value={newItem.brand}
                     onChange={(e) => {
                       const val = e.target.value
+                      console.log('Brand input change:', val)
                       setNewItem(prev => ({ ...prev, brand: val }))
                     }}
                     list="brandOptions"
@@ -792,7 +807,11 @@ const AddPurchase = () => {
                       inputMode="numeric"
                       pattern="[0-9]*"
                       value={newItem.imeiNumber1}
-                      onChange={(e) => setNewItem({ ...newItem, imeiNumber1: e.target.value.replace(/\D/g, '') })}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/g, '')
+                        console.log('IMEI1 input change:', val)
+                        setNewItem({ ...newItem, imeiNumber1: val })
+                      }}
                       className="w-full rounded-xl border-2 border-slate-200 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100 transition-all px-4 py-2.5"
                       placeholder="Scan/enter IMEI 1"
                     />

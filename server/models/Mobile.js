@@ -6,7 +6,7 @@ const MobileSchema = new mongoose.Schema({
   brand: { type: String, default: '', index: true },
   modelNumber: { type: String, required: true },
   imeiNumber1: { type: String, default: undefined, unique: true, sparse: true, index: true },
-  imeiNumber2: { type: String, default: undefined, unique: true, sparse: true },
+  imeiNumber2: { type: String, default: undefined, unique: true, sparse: true, index: true },
   dealerId: { type: String, required: true, index: true },
   dealerName: { type: String, required: true },
   // Generated unique item codes used for billing (e.g., VIV-MOB-Y21-0001)
@@ -25,6 +25,9 @@ const MobileSchema = new mongoose.Schema({
   battery: { type: String, default: '' },
   operatingSystem: { type: String, default: '' },
   networkType: { type: String, default: '' },
+  // Status field to distinguish between stock update and inventory
+  status: { type: String, default: 'stock_update', enum: ['stock_update', 'inventory'], index: true },
+  movedToInventoryAt: { type: Date, default: null },
 }, { timestamps: true })
 
 module.exports = mongoose.model('Mobile', MobileSchema)

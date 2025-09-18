@@ -99,7 +99,7 @@ exports.updateMobile = async (req, res) => {
       doc.dealerName = dealer.name
     }
     const norm = (s) => (s && String(s).trim() ? String(s).trim() : undefined)
-    const fields = ['mobileName','brand','modelNumber','pricePerProduct','sellingPrice','totalQuantity','color','ram','storage','simSlot','processor','displaySize','camera','battery','operatingSystem','networkType','productIds']
+    const fields = ['mobileName','brand','modelNumber','pricePerProduct','sellingPrice','totalQuantity','color','ram','storage','simSlot','processor','displaySize','camera','battery','operatingSystem','networkType','productIds','status','movedToInventoryAt']
     fields.forEach(k => { if (b[k] != null) doc[k] = b[k] })
     if (b.productId) {
       if (!Array.isArray(doc.productIds)) doc.productIds = []

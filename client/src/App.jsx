@@ -41,8 +41,14 @@ const LoadingSpinner = () => (
 )
 
 const RequireAuth = ({ children }) => {
-  const { auth } = useAuth()
+  const { auth, isInitialized } = useAuth()
   const location = useLocation()
+  
+  // Show loading while auth state is being initialized
+  if (!isInitialized) {
+    return <LoadingSpinner />
+  }
+  
   if (!auth.isAuthenticated) {
     return <Navigate to="/login" state={{ from: location.pathname }} replace />
   }
@@ -50,7 +56,13 @@ const RequireAuth = ({ children }) => {
 }
 
 const AppShell = () => {
-  const { auth } = useAuth()
+  const { auth, isInitialized } = useAuth()
+  
+  // Show loading while auth state is being initialized
+  if (!isInitialized) {
+    return <LoadingSpinner />
+  }
+  
   return (
     <HashRouter>
       <div className="min-h-screen bg-white text-slate-900 transition-colors duration-200">
