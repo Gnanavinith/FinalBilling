@@ -35,8 +35,7 @@
       { "from": "../server", "to": "server" }
     ],
     "win": {
-      "target": [ { "target": "nsis", "arch": ["x64"] } ],
-      "icon": "build/icon.ico"
+      "target": [ { "target": "nsis", "arch": ["x64"] } ]
     },
     "nsis": {
       "oneClick": false,
