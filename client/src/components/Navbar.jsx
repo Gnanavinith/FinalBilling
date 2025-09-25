@@ -77,22 +77,7 @@ const Navbar = () => {
   }
   return (
     <header className="h-16 bg-white/95 backdrop-blur border-b border-slate-200 flex items-center px-6 justify-between transition-colors duration-200 print:hidden shadow-sm">
-      <div className="flex items-center gap-3">
-        <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-cyan-600 rounded-lg flex items-center justify-center">
-          <span className="text-white font-bold text-sm">SP</span>
-        </div>
-        <div className="flex flex-col leading-tight">
-          <div className="flex items-center gap-2">
-            <div className="font-extrabold text-xl tracking-wide bg-gradient-to-r from-indigo-600 to-fuchsia-600 bg-clip-text text-transparent">SPOT</div>
-            <span className="hidden md:inline text-xs text-slate-500">your search ends here</span>
-          </div>
-          <div className="flex items-center gap-1.5 mt-0.5 text-[11px] font-semibold">
-            <span className="px-2 py-0.5 rounded-full bg-green-50 text-green-700 border border-green-200">Sales</span>
-            <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">Service</span>
-            <span className="px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200">Accessories</span>
-          </div>
-        </div>
-      </div>
+     
       <div className="flex items-center gap-3">
         <div className="relative">
           <button 
