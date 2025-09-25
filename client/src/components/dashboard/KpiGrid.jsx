@@ -7,14 +7,14 @@ import {
   MdShowChart, 
   MdWarningAmber 
 } from 'react-icons/md'
-import { formatCurrencyInr } from '../utils/formatters'
+import { formatCurrency  } from '../../utils/formatters'
 
 const KpiGrid = ({ kpis }) => {
   const kpiConfigs = [
     {
       icon: MdTrendingUp,
       title: "Total Revenue (This Month)",
-      value: formatCurrencyInr(kpis.totalRevenueThisMonth),
+      value: formatCurrency(kpis.totalRevenueThisMonth),
       sub: "Last 30 days",
       color: "green"
     },

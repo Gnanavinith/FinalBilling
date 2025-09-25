@@ -1,11 +1,11 @@
 import React from 'react'
 import { isElectron, apiBase } from '../utils/environment'
-import KpiGrid from './components/KpiGrid'
-import ChartsSection from './components/ChartsSection'
-import QuickActions from './components/QuickActions'
-import RecentActivity from './components/RecentActivity'
-import LoadingSpinner from './components/LoadingSpinner'
-import ErrorMessage from './components/ErrorMessage'
+import KpiGrid from '../components/dashboard/KpiGrid'
+import ChartsSection from '../components/dashboard/ChartsSection'
+import QuickActions from '../components/dashboard/QuickActions'
+import RecentActivity from '../components/dashboard/RecentActivity'
+import LoadingSpinner from '../components/dashboard/LoadingSpinner'
+import ErrorMessage from '../components/dashboard/ErrorMessage'
 
 const Dashboard = () => {
   const [loading, setLoading] = React.useState(true)

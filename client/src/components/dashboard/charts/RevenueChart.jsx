@@ -1,6 +1,6 @@
 import React from 'react'
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
-import { formatCurrencyInr } from '../../utils/formatters'
+import { formatCurrency  } from '../../../utils/formatters'
 
 const RevenueChart = ({ data }) => (
   <div className="h-80 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-4">
@@ -10,7 +10,7 @@ const RevenueChart = ({ data }) => (
         <XAxis dataKey="name" stroke="#475569" fontSize={12} />
         <YAxis stroke="#475569" fontSize={12} tickFormatter={(v) => `${Math.round(v / 1000)}k`} />
         <Tooltip 
-          formatter={(v) => formatCurrencyInr(v)} 
+          formatter={(v) => formatCurrency(v)} 
           contentStyle={{ 
             backgroundColor: 'rgba(255, 255, 255, 0.95)', 
             border: 'none', 
