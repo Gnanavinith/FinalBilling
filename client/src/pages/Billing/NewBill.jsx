@@ -1,11 +1,11 @@
 import React, { useMemo, useState, useRef } from 'react'
-import CustomerDetailsForm from '../../components/CustomerDetailsForm'
-import ProductEntryForm from '../../components/ProductEntryForm'
-import ItemsList from '../../components/ItemsList'
-import InvoiceSummary from '../../components/InvoiceSummary'
-import PrintableInvoice from '../../components/PrintableInvoice'
-import { useProductLookup } from '../../hooks/useProductLookup'
-import { useBillCalculations } from '../../hooks/useBillCalculations'
+import CustomerDetailsForm from '../../components/billing/CustomerDetailsForm'
+import ProductEntryForm from '../../components/billing/ProductEntryForm'
+import ItemsList from '../../components/billing/ItemsList'
+import InvoiceSummary from '../../components/billing/InvoiceSummary'
+import PrintableInvoice from '../../components/billing/PrintableInvoice'
+import { useProductLookup } from '../../components/billing/hooks/useProductLookup'
+import { useBillCalculations } from '../../components/billing/hooks/useBillCalculations'
 import { MdShoppingCart } from 'react-icons/md'
 
 const emptyItem = () => ({

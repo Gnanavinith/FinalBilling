@@ -1,6 +1,6 @@
 import React from 'react'
 import { MdShoppingCart } from 'react-icons/md'
-import { formatCurrency } from '../utils/formatters'
+import { formatCurrency } from '../../../utils/formatters'
 
 const MobileCard = ({ mobile, onAddToCart }) => {
   return (

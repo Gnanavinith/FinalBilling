@@ -1,9 +1,9 @@
 import React from 'react'
 import { MdInventory2, MdSearch, MdAdd, MdClear } from 'react-icons/md'
-import ProductTypeSelector from './ProductTypeSelector'
-import ProductNameInput from './ProductNameInput'
-import ProductIdentifierInput from './ProductIdentifierInput'
-import ProductDetailsInputs from './ProductDetailsInputs'
+import ProductTypeSelector from './product/ProductTypeSelector'
+import ProductNameInput from './product/ProductNameInput'
+import ProductIdentifierInput from './product/ProductIdentifierInput'
+import ProductDetailsInputs from './product/ProductDetailsInputs'
 
 const ProductEntryForm = ({
   draftItem,

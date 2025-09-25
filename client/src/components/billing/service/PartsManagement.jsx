@@ -1,7 +1,7 @@
 import React from 'react'
-import PartEntryForm from './PartEntryForm'
-import PartsList from './PartsList'
-import ChargesSection from './ChargesSection'
+import PartEntryForm from '../../PartEntryForm'
+import PartsList from '../../PartsList'
+import ChargesSection from '../../ChargesSection'
 
 const PartsManagement = ({
   parts,

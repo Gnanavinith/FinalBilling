@@ -1,16 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-import ServiceLookupForm from "../../components/ServiceLookupForm";
-import CustomerDeviceForm from "../../components/CustomerDeviceForm";
-import PartsManagement from "../../components/PartsManagement";
-import InvoiceSummary from "../../components/ServiceInvoiceSummary";
-import PrintableInvoice from "../../components/PrintableInvoice";
+import ServiceLookupForm from "../../components/billing/service/ServiceLookupForm";
+import CustomerDeviceForm from "../../components/billing/service/CustomerDeviceForm";
+import PartsManagement from "../../components/billing/service/PartsManagement";
+import InvoiceSummary from "../../components/billing/service/ServiceInvoiceSummary";
+import PrintableInvoice from "../../components/billing/PrintableInvoice";
 
-import { useServiceLookup } from "../../hooks/useServiceLookup";
-import { useParts } from "../../hooks/useParts";
-import { useCalculations } from "../../hooks/useCalculations";
-import { useInvoiceExport } from "../../hooks/useInvoiceExport";
+import { useServiceLookup } from "../../components/billing/service/hooks/useServiceLookup";
+import { useParts } from "../../components/billing/service/hooks/useParts";
+import { useCalculations } from "../../components/billing/service/hooks/useCalculations";
+import { useInvoiceExport } from "../../components/billing/service/hooks/useInvoiceExport";
 
 const emptyPart = () => ({
   name: "",

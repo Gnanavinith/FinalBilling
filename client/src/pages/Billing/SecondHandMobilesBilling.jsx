@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
-import AvailableMobilesList from '../../components/AvailableMobilesList'
-import CustomerInfoForm from '../../components/CustomerInfoForm'
-import CartSummary from '../../components/CartSummary'
-import PrintableInvoice from '../../components/PrintableInvoice'
-import { useAvailableMobiles } from '../../hooks/useAvailableMobiles'
-import { useCart } from '../../hooks/useCart'
-import { useSalesProcessing } from '../../hooks/useSalesProcessing'
+import AvailableMobilesList from '../../components/billing/secondsphone/AvailableMobilesList'
+import CustomerInfoForm from '../../components/billing/secondsphone/CustomerInfoForm'
+import CartSummary from '../../components/billing/secondsphone/CartSummary'
+import PrintableInvoice from '../../components/billing/PrintableInvoice'
+import { useAvailableMobiles } from '../../components/billing/hooks/useAvailableMobiles'
+import { useCart } from '../../components/billing/hooks/useCart'
+import { useSalesProcessing } from '../../components/billing/hooks/useSalesProcessing'
 import { MdPhoneAndroid } from 'react-icons/md'
 
 const SecondHandMobilesBilling = () => {

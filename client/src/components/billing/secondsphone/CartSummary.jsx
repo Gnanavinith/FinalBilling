@@ -1,7 +1,7 @@
 import React from 'react'
 import { MdShoppingCart, MdReceipt, MdPrint } from 'react-icons/md'
 import CartItem from './CartItem'
-import { formatCurrency } from '../utils/formatters'
+import { formatCurrency } from '../../../utils/formatters'
 
 const CartSummary = ({ selectedMobiles, totals, onRemoveFromCart, onUpdateQuantity, onProcessSale, onPrintInvoice, processingSale }) => {
   return (
