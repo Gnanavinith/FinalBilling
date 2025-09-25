@@ -1,5 +1,5 @@
 import React from 'react'
-import { MdSearch, MdShoppingCart, MdPhoneAndroid } from 'react-icons/md'
+import { MdSearch , MdShoppingCart, MdPhoneAndroid } from 'react-icons/md'
 import MobileCard from './MobileCard'
 
 const AvailableMobilesList = ({ availableMobiles, loading, searchTerm, onSearchChange, onAddToCart }) => {

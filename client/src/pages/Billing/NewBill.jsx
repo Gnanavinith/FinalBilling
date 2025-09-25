@@ -8,15 +8,15 @@ import { useProductLookup } from '../../hooks/useProductLookup'
 import { useBillCalculations } from '../../hooks/useBillCalculations'
 import { MdShoppingCart } from 'react-icons/md'
 
-const emptyItem = () => ({ 
+const emptyItem = () => ({
   type: 'Mobile',
-  name: '', 
-  imei: '', 
+  name: '',
+  imei: '',
   productId: '',
-  quantity: 1, 
-  price: 0, 
-  gstPercent: 18, 
-  discountType: 'percent', 
+  quantity: 1,
+  price: 0,
+  gstPercent: 18,
+  discountType: 'percent',
   discountValue: 0,
   model: '',
   color: '',
@@ -110,12 +110,16 @@ const NewBill = () => {
           mobileNumber={mobileNumber}
           paymentMethod={paymentMethod}
           items={items}
-          printInvoice={() => {/* print logic */}}
-          exportPdf={() => {/* export logic */}}
-          onCheckout={async () => {/* checkout logic */}}
+          printInvoice={() => {/* print logic */ }}
+          exportPdf={() => {/* export logic */ }}
+          onCheckout={async () => {/* checkout logic */ }}
         />
       </div>
 
+      {/* // Add import at the top */}
+      {/* import PrintableInvoice from './PrintableInvoice'; */}
+
+      {/* // Replace the entire printable invoice section in NewBill.js with: */}
       <PrintableInvoice
         ref={invoiceRef}
         billNumber={billNumber}
@@ -123,9 +127,10 @@ const NewBill = () => {
         mobileNumber={mobileNumber}
         paymentMethod={paymentMethod}
         items={items}
-        draftItem={draftItem}
         draftItemActive={draftItemActive}
-        calculations={calculations}
+        draftItem={draftItem}
+        calc={calculations}
+        now={Date.now()}
       />
     </div>
   )
