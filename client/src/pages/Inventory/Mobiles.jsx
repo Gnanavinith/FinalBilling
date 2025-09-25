@@ -1,33 +1,41 @@
 import React, { useState, useEffect, useMemo } from 'react'
-import { FiSearch, FiAlertTriangle, FiCheckCircle, FiSmartphone, FiTag, FiPackage, FiDollarSign, FiCalendar, FiDownload, FiFilter } from 'react-icons/fi'
+import { FiSmartphone } from 'react-icons/fi'
+import SearchAndFilterBar from '../../components/inventory/mobile/SearchAndFilterBar'
+import StockSummaryCards from '../../components/inventory/mobile/StockSummaryCards'
+import InventoryTable from '../../components/inventory/mobile/InventoryTable'
+import LowStockAlert from '../../components/inventory/mobile/LowStockAlert'
 
 // Resolve API base: in Electron packaged app, backend is on localhost:5000; in dev use Vite proxy with empty base
 const apiBase = (typeof window !== 'undefined' && window?.process?.versions?.electron) ? 'http://localhost:5000' : ''
 
 const Mobiles = () => {
   const [inventory, setInventory] = useState([])
-  const [purchases, setPurchases] = useState([])
-  const [sales, setSales] = useState([])
-  const [search, setSearch] = useState('')
-  const [lowStockThreshold, setLowStockThreshold] = useState(5)
-  const [searchInput, setSearchInput] = useState('')
-  const [storeId, setStoreId] = useState('')
   const [storeStock, setStoreStock] = useState([])
-  const [filterBrand, setFilterBrand] = useState('')
-  const [filterMobile, setFilterMobile] = useState('')
-  const [filterModel, setFilterModel] = useState('')
-  const [filterColor, setFilterColor] = useState('')
-  const [filterRam, setFilterRam] = useState('')
-  const [filterStorage, setFilterStorage] = useState('')
-  const [filterProcessor, setFilterProcessor] = useState('')
-  const [filterImei, setFilterImei] = useState('')
-  const [brandOptions, setBrandOptions] = useState([])
-  const [mobileOptions, setMobileOptions] = useState([])
-  const [modelOptions, setModelOptions] = useState([])
-  const [colorOptions, setColorOptions] = useState([])
-  const [ramOptions, setRamOptions] = useState([])
-  const [storageOptions, setStorageOptions] = useState([])
-  const [processorOptions, setProcessorOptions] = useState([])
+  const [searchInput, setSearchInput] = useState('')
+  const [search, setSearch] = useState('')
+  const [storeId, setStoreId] = useState('')
+  const [filters, setFilters] = useState({
+    brand: '',
+    mobile: '',
+    model: '',
+    color: '',
+    ram: '',
+    storage: '',
+    processor: '',
+    imei: ''
+  })
+  
+  const [filterOptions, setFilterOptions] = useState({
+    brands: [],
+    mobiles: [],
+    models: [],
+    colors: [],
+    rams: [],
+    storages: [],
+    processors: []
+  })
+
+  const lowStockThreshold = 5
 
   useEffect(() => {
     loadData()
@@ -53,8 +61,6 @@ const Mobiles = () => {
       
       // Filter to only show items that ARE in inventory (status === 'inventory')
       const inventoryItems = rows.filter(item => item.status === 'inventory')
-      console.log('Inventory items found:', inventoryItems.length)
-      console.log('Sample inventory item:', inventoryItems[0])
       const mapped = inventoryItems.map(r => ({
         id: r.id,
         category: 'Mobile',
@@ -81,20 +87,36 @@ const Mobiles = () => {
         createdAt: r.createdAt || new Date().toISOString(),
         updatedAt: r.updatedAt || r.createdAt || new Date().toISOString(),
       }))
-      console.log('Mapped inventory data:', mapped[0])
+      
       setInventory(mapped)
-      // initial options from full dataset
-      const brands = Array.from(new Set(mapped.map(x => x.brand).filter(Boolean))).sort()
-      setBrandOptions(brands)
-      setPurchases([])
-      setSales([])
+      setFilterOptions(prev => ({
+        ...prev,
+        brands: Array.from(new Set(mapped.map(x => x.brand).filter(Boolean))).sort()
+      }))
     } catch (error) {
       console.error('Error loading mobiles:', error)
       setInventory([])
     }
   }
 
-  // Remaining stock directly from backend quantity for now
+  // Update filter options based on current filters
+  useEffect(() => {
+    const items = inventory.filter(x => x.category === 'Mobile')
+    const forBrand = items
+    const forMobile = items.filter(x => (!filters.brand || x.brand === filters.brand))
+    const forModel = forMobile.filter(x => (!filters.mobile || x.productName === filters.mobile))
+    const forDetails = forModel.filter(x => (!filters.model || x.model === filters.model))
+
+    setFilterOptions({
+      brands: Array.from(new Set(forBrand.map(x => x.brand).filter(Boolean))).sort(),
+      mobiles: Array.from(new Set(forMobile.map(x => x.productName).filter(Boolean))).sort(),
+      models: Array.from(new Set(forModel.map(x => x.model).filter(Boolean))).sort(),
+      colors: Array.from(new Set(forDetails.map(x => x.color).filter(Boolean))).sort(),
+      rams: Array.from(new Set(forDetails.map(x => x.ram).filter(Boolean))).sort(),
+      storages: Array.from(new Set(forDetails.map(x => x.storage).filter(Boolean))).sort(),
+      processors: Array.from(new Set(forDetails.map(x => x.processor).filter(Boolean))).sort()
+    })
+  }, [inventory, filters.brand, filters.mobile, filters.model])
 
   const mobileInventory = useMemo(() => {
     const mobileItems = inventory.filter(item => item.category === 'Mobile')
@@ -105,22 +127,21 @@ const Mobiles = () => {
         const name = (it.productName || '').toLowerCase()
         const model = (it.model || '').toLowerCase()
         const terms = q.split(/\s+/).filter(Boolean)
-        // Match all terms anywhere in brand OR name OR model
         return terms.every(t => brand.includes(t) || name.includes(t) || model.includes(t))
       })
-      .filter(it => (!filterBrand || it.brand === filterBrand))
-      .filter(it => (!filterMobile || it.productName === filterMobile))
-      .filter(it => (!filterModel || it.model === filterModel))
-      .filter(it => (!filterColor || it.color === filterColor))
-      .filter(it => (!filterRam || it.ram === filterRam))
-      .filter(it => (!filterStorage || it.storage === filterStorage))
-      .filter(it => (!filterProcessor || it.processor === filterProcessor))
+      .filter(it => (!filters.brand || it.brand === filters.brand))
+      .filter(it => (!filters.mobile || it.productName === filters.mobile))
+      .filter(it => (!filters.model || it.model === filters.model))
+      .filter(it => (!filters.color || it.color === filters.color))
+      .filter(it => (!filters.ram || it.ram === filters.ram))
+      .filter(it => (!filters.storage || it.storage === filters.storage))
+      .filter(it => (!filters.processor || it.processor === filters.processor))
       .filter(it => {
-        if (!filterImei) return true
-        const q = String(filterImei).trim()
+        if (!filters.imei) return true
+        const q = String(filters.imei).trim()
         return String(it.imei1||'').includes(q) || String(it.imei2||'').includes(q)
       })
-    // Group by brand+model, sum stock and compute min createdAt
+
     const grouped = mobileItems.reduce((map, it) => {
       const key = `${(it.brand||'').toLowerCase()}::${(it.model||'').toLowerCase()}`
       if (!map[key]) map[key] = { ...it, id: key, productName: `${it.brand ? (it.brand + ' ') : ''}${it.productName}`, imei1: '', imei2: '', stock: 0, createdAt: it.createdAt }
@@ -128,41 +149,61 @@ const Mobiles = () => {
       if (new Date(it.createdAt) < new Date(map[key].createdAt)) map[key].createdAt = it.createdAt
       return map
     }, {})
+
     const arr = Object.values(grouped)
     if (!storeId) return arr.map(item => ({ ...item, remainingStock: item.stock }))
-    // When a store is selected, sum quantities from StoreStock by matching productModel/name
+    
     return arr.map(item => {
       const qty = storeStock
         .filter(s => (s.productModel || '') === item.model && (s.productName || '') === item.productName)
         .reduce((sum, r) => sum + (Number(r.quantity) || 0), 0)
       return { ...item, remainingStock: qty }
     })
-  }, [inventory, storeId, storeStock, search, filterBrand, filterMobile, filterModel, filterColor, filterRam, filterStorage, filterProcessor, filterImei])
+  }, [inventory, storeId, storeStock, search, filters])
 
-  // Build dependent dropdown options based on brand/mobile/model selections
-  useEffect(() => {
-    const items = inventory.filter(x => x.category === 'Mobile')
-    const forBrand = items
-    const forMobile = items.filter(x => (!filterBrand || x.brand === filterBrand))
-    const forModel = forMobile.filter(x => (!filterMobile || x.productName === filterMobile))
-    const forDetails = forModel.filter(x => (!filterModel || x.model === filterModel))
+  const handleFilterChange = (filterName, value) => {
+    setFilters(prev => {
+      const newFilters = { ...prev, [filterName]: value }
+      
+      // Reset dependent filters when parent filter changes
+      if (filterName === 'brand') {
+        newFilters.mobile = ''
+        newFilters.model = ''
+        newFilters.color = ''
+        newFilters.ram = ''
+        newFilters.storage = ''
+        newFilters.processor = ''
+      } else if (filterName === 'mobile') {
+        newFilters.model = ''
+        newFilters.color = ''
+        newFilters.ram = ''
+        newFilters.storage = ''
+        newFilters.processor = ''
+      } else if (filterName === 'model') {
+        newFilters.color = ''
+        newFilters.ram = ''
+        newFilters.storage = ''
+        newFilters.processor = ''
+      }
+      
+      return newFilters
+    })
+  }
 
-    const mobiles = Array.from(new Set(forMobile.map(x => x.productName).filter(Boolean))).sort()
-    const models = Array.from(new Set(forModel.map(x => x.model).filter(Boolean))).sort()
-    const colors = Array.from(new Set(forDetails.map(x => x.color).filter(Boolean))).sort()
-    const rams = Array.from(new Set(forDetails.map(x => x.ram).filter(Boolean))).sort()
-    const storages = Array.from(new Set(forDetails.map(x => x.storage).filter(Boolean))).sort()
-    const processors = Array.from(new Set(forDetails.map(x => x.processor).filter(Boolean))).sort()
-
-    setMobileOptions(mobiles)
-    setModelOptions(models)
-    setColorOptions(colors)
-    setRamOptions(rams)
-    setStorageOptions(storages)
-    setProcessorOptions(processors)
-  }, [inventory, filterBrand, filterMobile, filterModel])
-
-  const filteredInventory = useMemo(() => mobileInventory, [mobileInventory])
+  const clearAllFilters = () => {
+    setSearchInput('')
+    setSearch('')
+    setFilters({
+      brand: '',
+      mobile: '',
+      model: '',
+      color: '',
+      ram: '',
+      storage: '',
+      processor: '',
+      imei: ''
+    })
+  }
 
   const downloadStatement = async (item) => {
     try {
@@ -202,294 +243,43 @@ const Mobiles = () => {
     }
   }
 
-  const lowStockItems = filteredInventory.filter(item => item.remainingStock <= lowStockThreshold)
-  const outOfStockItems = filteredInventory.filter(item => item.remainingStock <= 0)
-
-  const getStockStatus = (stock) => {
-    if (stock <= 0) return { color: 'bg-red-100 text-red-700', icon: FiAlertTriangle, text: 'Out of Stock' }
-    if (stock <= lowStockThreshold) return { color: 'bg-yellow-100 text-yellow-700', icon: FiAlertTriangle, text: 'Low Stock' }
-    return { color: 'bg-green-100 text-green-700', icon: FiCheckCircle, text: 'In Stock' }
-  }
+  const lowStockItems = mobileInventory.filter(item => item.remainingStock <= lowStockThreshold)
+  const outOfStockItems = mobileInventory.filter(item => item.remainingStock <= 0)
 
   return (
     <div className="p-6 min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-extrabold flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"><FiSmartphone className="text-slate-700" /> Mobile Inventory</h1>
-        <div className="flex items-center space-x-4">
-          <div className="relative">
-            <input
-              type="text"
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              onKeyDown={(e)=>{ if(e.key==='Enter'){ setSearch(searchInput.trim()) } }}
-              placeholder="Search by brand or mobile name..."
-              className="w-72 rounded-xl border-2 border-slate-200 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100 transition-all px-4 py-2.5 pl-10"
-            />
-            <FiSearch className="absolute left-2 top-2.5 w-4 h-4 text-slate-400" />
-          </div>
-          <button
-            onClick={()=>setSearch(searchInput.trim())}
-            className="px-5 py-2.5 rounded-xl border-2 border-slate-300 hover:bg-slate-50 hover:border-slate-400 flex items-center gap-2 transition-all"
-          >
-            <FiSearch className="w-4 h-4" />
-            <span>Find</span>
-          </button>
-          <button
-            onClick={()=>{ setSearchInput(''); setSearch(''); setFilterMobile(''); setFilterModel(''); setFilterColor(''); setFilterRam(''); setFilterStorage(''); setFilterProcessor(''); setFilterImei('') }}
-            className="px-5 py-2.5 rounded-xl border-2 border-slate-300 hover:bg-slate-50 hover:border-slate-400 transition-all"
-          >
-            Clear Filters
-          </button>
-          <div className="flex items-center gap-2 text-slate-600"><FiFilter className="w-4 h-4" /><span className="text-sm">Filters:</span></div>
-          <select
-            value={filterBrand}
-            onChange={e=>{ setFilterBrand(e.target.value); setFilterMobile(''); setFilterModel(''); setFilterColor(''); setFilterRam(''); setFilterStorage(''); setFilterProcessor('') }}
-            className="rounded-xl border-2 border-slate-200 px-3 py-2 focus:border-blue-400 focus:ring-4 focus:ring-blue-100 transition-all"
-          >
-            <option value="">All Brand</option>
-            {brandOptions.map(v => <option key={v} value={v}>{v}</option>)}
-          </select>
-          <select
-            value={filterMobile}
-            onChange={e=>{ setFilterMobile(e.target.value); setFilterModel(''); setFilterColor(''); setFilterRam(''); setFilterStorage(''); setFilterProcessor('') }}
-            className="rounded-xl border-2 border-slate-200 px-3 py-2 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100 transition-all"
-          >
-            <option value="">All Mobile</option>
-            {mobileOptions.map(v => <option key={v} value={v}>{v}</option>)}
-          </select>
-          <select
-            value={filterModel}
-            onChange={e=>{ setFilterModel(e.target.value); setFilterColor(''); setFilterRam(''); setFilterStorage(''); setFilterProcessor('') }}
-            className="rounded-xl border-2 border-slate-200 px-3 py-2 focus:border-purple-400 focus:ring-4 focus:ring-purple-100 transition-all"
-          >
-            <option value="">All Model</option>
-            {modelOptions.map(v => <option key={v} value={v}>{v}</option>)}
-          </select>
-          <select
-            value={filterColor}
-            onChange={e=>setFilterColor(e.target.value)}
-            className="rounded-xl border-2 border-slate-200 px-3 py-2 focus:border-pink-400 focus:ring-4 focus:ring-pink-100 transition-all"
-          >
-            <option value="">All Color</option>
-            {colorOptions.map(v => <option key={v} value={v}>{v}</option>)}
-          </select>
-          <select
-            value={filterRam}
-            onChange={e=>setFilterRam(e.target.value)}
-            className="rounded-xl border-2 border-slate-200 px-3 py-2 focus:border-amber-400 focus:ring-4 focus:ring-amber-100 transition-all"
-          >
-            <option value="">All RAM</option>
-            {ramOptions.map(r => <option key={r} value={r}>{r}</option>)}
-          </select>
-          <select
-            value={filterStorage}
-            onChange={e=>setFilterStorage(e.target.value)}
-            className="rounded-xl border-2 border-slate-200 px-3 py-2 focus:border-teal-400 focus:ring-4 focus:ring-teal-100 transition-all"
-          >
-            <option value="">All Storage</option>
-            {storageOptions.map(s => <option key={s} value={s}>{s}</option>)}
-          </select>
-          <select
-            value={filterProcessor}
-            onChange={e=>setFilterProcessor(e.target.value)}
-            className="rounded-xl border-2 border-slate-200 px-3 py-2 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100 transition-all"
-          >
-            <option value="">All Processor</option>
-            {processorOptions.map(p => <option key={p} value={p}>{p}</option>)}
-          </select>
-          <input
-            type="text"
-            value={filterImei}
-            onChange={e=>setFilterImei(e.target.value)}
-            placeholder="IMEI"
-            className="rounded-xl border-2 border-slate-200 px-3 py-2 focus:border-purple-400 focus:ring-4 focus:ring-purple-100 transition-all"
-          />
-        </div>
-      </div>
-
-      {/* Stock Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-lg hover:shadow-xl transition-all">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-600">Total Products</p>
-              <p className="text-2xl font-semibold text-slate-900">{filteredInventory.length}</p>
-            </div>
-            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-              <span className="text-blue-600 text-sm font-semibold">📱</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-lg hover:shadow-xl transition-all">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-600">In Stock</p>
-              <p className="text-2xl font-semibold text-green-600">
-                {filteredInventory.filter(item => item.remainingStock > lowStockThreshold).length}
-              </p>
-            </div>
-            <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-              <FiCheckCircle className="w-4 h-4 text-green-600" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-lg hover:shadow-xl transition-all">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-600">Low Stock</p>
-              <p className="text-2xl font-semibold text-yellow-600">{lowStockItems.length}</p>
-            </div>
-            <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
-              <FiAlertTriangle className="w-4 h-4 text-yellow-600" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-lg hover:shadow-xl transition-all">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-600">Out of Stock</p>
-              <p className="text-2xl font-semibold text-red-600">{outOfStockItems.length}</p>
-            </div>
-            <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
-              <FiAlertTriangle className="w-4 h-4 text-red-600" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Inventory Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-lg hover:shadow-xl transition-all">
-        <div className="p-6 border-b border-slate-200">
-          <h2 className="text-xl font-bold flex items-center gap-2 bg-gradient-to-r from-slate-700 to-slate-900 bg-clip-text text-transparent"><FiPackage className="text-slate-700" /> Mobile Stock Details</h2>
-        </div>
+        <h1 className="text-3xl font-extrabold flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          <FiSmartphone className="text-slate-700" /> Mobile Inventory
+        </h1>
         
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-sm">
-            <thead>
-              <tr className="text-left text-slate-600 text-xs uppercase border-b bg-gradient-to-r from-indigo-50 to-blue-50">
-                <th className="py-3 px-4"><div className="flex items-center gap-1"><FiTag className="w-4 h-4" /> Product Name</div></th>
-                <th className="py-3 px-4"><div className="flex items-center gap-1"><FiTag className="w-4 h-4" /> Brand</div></th>
-                <th className="py-3 px-4"><div className="flex items-center gap-1"><FiSmartphone className="w-4 h-4" /> Model/Variant</div></th>
-                <th className="py-3 px-4 w-48"><div className="flex items-center gap-1"><FiTag className="w-4 h-4" /> IMEI</div></th>
-                <th className="py-3 px-4">Features</th>
-                <th className="py-3 px-4">Remaining Stock</th>
-                <th className="py-3 px-4"><div className="flex items-center gap-1"><FiDollarSign className="w-4 h-4" /> Purchase Price</div></th>
-                <th className="py-3 px-4"><div className="flex items-center gap-1"><FiDollarSign className="w-4 h-4" /> Stock Value</div></th>
-                <th className="py-3 px-4"><div className="flex items-center gap-1"><FiCheckCircle className="w-4 h-4" /> Status</div></th>
-                <th className="py-3 px-4"><div className="flex items-center gap-1"><FiCalendar className="w-4 h-4" /> Last Updated</div></th>
-                <th className="py-3 px-4"><div className="flex items-center gap-1"><FiDownload className="w-4 h-4" /> Actions</div></th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredInventory.length === 0 ? (
-                <tr>
-                  <td className="py-8 px-4 text-center text-slate-500" colSpan={11}>
-                    No mobile products found in inventory.
-                  </td>
-                </tr>
-              ) : (
-                filteredInventory.map(item => {
-                  const stockStatus = getStockStatus(item.remainingStock)
-                  const StockIcon = stockStatus.icon
-                  const stockValue = item.remainingStock * item.purchasePrice
-                  const lastUpdated = item.updatedAt ? new Date(item.updatedAt).toLocaleDateString() : new Date(item.createdAt).toLocaleDateString()
-
-                  // Debug logging
-                  console.log('Rendering item:', item.productName, 'Brand:', item.brand, 'IMEI1:', item.imei1, 'IMEI2:', item.imei2)
-
-                  return (
-                    <tr key={item.id} className="border-b border-slate-100 hover:bg-slate-50">
-                      <td className="py-3 px-4">
-                        <div className="font-medium text-slate-900">{item.productName}</div>
-                        <div className="text-xs text-slate-500">{item.dealerName}</div>
-                      </td>
-                      <td className="py-3 px-4">
-                        <span className="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">
-                          {item.brand && item.brand.trim() ? item.brand : 'No Brand'}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4">
-                        <div className="font-medium">{item.model}</div>
-                        {item.color && (
-                          <div className="text-xs text-slate-500">Color: {item.color}</div>
-                        )}
-                      </td>
-                      <td className="py-3 px-4 w-48">
-                        <div className="font-mono text-xs">
-                          <div>{item.imei1 ? item.imei1 : '-'}</div>
-                          {item.imei2 ? (
-                            <div className="text-slate-500">{item.imei2}</div>
-                          ) : null}
-                        </div>
-                      </td>
-                      <td className="py-3 px-4">
-                        <div className="text-xs space-y-1">
-                          {item.ram && <div>RAM: {item.ram}</div>}
-                          {item.storage && <div>Storage: {item.storage}</div>}
-                          {item.processor && <div>CPU: {item.processor}</div>}
-                          {item.displaySize && <div>Display: {item.displaySize}</div>}
-                        </div>
-                      </td>
-                      <td className="py-3 px-4">
-                        <span className={`px-2 py-1 text-xs rounded-full font-medium ${
-                          item.remainingStock <= 0 
-                            ? 'bg-red-100 text-red-700' 
-                            : item.remainingStock <= lowStockThreshold
-                            ? 'bg-yellow-100 text-yellow-700'
-                            : 'bg-green-100 text-green-700'
-                        }`}>
-                          {item.remainingStock}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4">
-                        <span className="font-medium">₹{item.purchasePrice.toFixed(2)}</span>
-                      </td>
-                      <td className="py-3 px-4">
-                        <span className="font-medium text-green-600">₹{stockValue.toFixed(2)}</span>
-                      </td>
-                      <td className="py-3 px-4">
-                        <span className={`inline-flex items-center space-x-1 px-2 py-1 text-xs rounded-full ${stockStatus.color}`}>
-                          <StockIcon className="w-3 h-3" />
-                          <span>{stockStatus.text}</span>
-                        </span>
-                      </td>
-                      <td className="py-3 px-4 text-slate-500">
-                        {lastUpdated}
-                      </td>
-                      <td className="py-3 px-4">
-                        <button onClick={()=>downloadStatement(item)} className="px-2 py-1 text-xs rounded-md border hover:bg-slate-50 inline-flex items-center gap-1"><FiDownload className="w-3 h-3" /> Download</button>
-                      </td>
-                    </tr>
-                  )
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
+        <SearchAndFilterBar
+          searchInput={searchInput}
+          setSearchInput={setSearchInput}
+          search={search}
+          setSearch={setSearch}
+          filters={filters}
+          onFilterChange={handleFilterChange}
+          filterOptions={filterOptions}
+          onClearFilters={clearAllFilters}
+        />
       </div>
 
-      {/* Low Stock Alert */}
+      <StockSummaryCards
+        inventory={mobileInventory}
+        lowStockThreshold={lowStockThreshold}
+        lowStockItems={lowStockItems}
+        outOfStockItems={outOfStockItems}
+      />
+
+      <InventoryTable
+        inventory={mobileInventory}
+        lowStockThreshold={lowStockThreshold}
+        onDownloadStatement={downloadStatement}
+      />
+
       {lowStockItems.length > 0 && (
-        <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-          <div className="flex items-center space-x-2 mb-2">
-            <FiAlertTriangle className="w-5 h-5 text-yellow-600" />
-            <h3 className="font-semibold text-yellow-800">Low Stock Alert</h3>
-          </div>
-          <p className="text-yellow-700 text-sm mb-3">
-            The following mobile products are running low on stock:
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-            {lowStockItems.map(item => (
-              <div key={item.id} className="bg-white rounded-lg p-2 border border-yellow-200">
-                <p className="font-medium text-sm">{item.productName} - {item.model}</p>
-                <p className="text-xs text-slate-600">Stock: {item.remainingStock}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+        <LowStockAlert lowStockItems={lowStockItems} />
       )}
     </div>
   )
