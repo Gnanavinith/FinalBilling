@@ -1,4 +1,5 @@
 import React from 'react'
+import { FiEye } from 'react-icons/fi'
 import PurchaseTableRow from './PurchaseTableRow'
 
 const PurchaseTable = ({
@@ -114,7 +115,7 @@ const MobilePurchaseCard = ({
       <div className="grid grid-cols-2 gap-3 mb-3">
         <div>
           <label className="text-xs text-slate-500">Dealer</label>
-          <p className="font-medium">{getDealerName(purchase.dealerId)}</p>
+          <p className="font-medium">{getDealerName(purchase.dealerId, dealers)}</p>
         </div>
         <div>
           <label className="text-xs text-slate-500">Status</label>

@@ -6,8 +6,8 @@ import ServiceSummaryChart from './charts/ServiceSummaryChart'
 
 const ChartsSection = ({ charts }) => {
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
-      <div className="xl:col-span-2 animate-slide-in-up" style={{animationDelay: '0.6s'}}>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+      <div className="lg:col-span-2 animate-slide-in-up" style={{animationDelay: '0.6s'}}>
         <Card title="📈 Month-wise Revenue" gradient={true}>
           <RevenueChart data={charts.monthlyRevenueData} />
         </Card>

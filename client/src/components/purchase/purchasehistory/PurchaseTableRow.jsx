@@ -30,7 +30,7 @@ const PurchaseTableRow = ({
 
   return (
     <tr className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
-      <td className="py-3 px-4">{getDealerName(purchase.dealerId)}</td>
+      <td className="py-3 px-4">{getDealerName(purchase.dealerId, dealers)}</td>
       <td className="py-3 px-4">{item.productName}</td>
       <td className="py-3 px-4">{item.model}</td>
       <td className="py-3 px-4 text-xs">{identifier}</td>

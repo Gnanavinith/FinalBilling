@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { MdAccountCircle, MdInventory, MdWarning, MdInfo } from 'react-icons/md'
+import { MdAccountCircle, MdInventory, MdWarning, MdInfo, MdMenu } from 'react-icons/md'
 import { FiBell } from 'react-icons/fi'
 import { useAuth } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 
-const Navbar = () => {
+const Navbar = ({ onMenuClick }) => {
   const { auth, logout } = useAuth()
   const navigate = useNavigate()
   const [lowStock, setLowStock] = useState([])
@@ -76,41 +76,55 @@ const Navbar = () => {
     navigate('/notifications')
   }
   return (
-    <header className="h-16 bg-white/95 backdrop-blur border-b border-slate-200 flex items-center px-6 justify-between transition-colors duration-200 print:hidden shadow-sm">
-     
+    <header className="h-16 bg-white/95 backdrop-blur border-b border-slate-200 flex items-center px-3 sm:px-6 justify-between transition-colors duration-200 print:hidden shadow-sm">
+      {/* Mobile menu button */}
       <div className="flex items-center gap-3">
+        <button
+          onClick={onMenuClick}
+          className="lg:hidden p-2 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-slate-800 transition-all duration-200"
+          aria-label="Open menu"
+        >
+          <MdMenu className="w-6 h-6" />
+        </button>
+        
+        {/* Notifications */}
         <div className="relative">
           <button 
             onClick={handleNotificationClick}
-            className={`relative p-2.5 rounded-xl transition-all duration-200 ${
+            className={`relative p-2 sm:p-2.5 rounded-xl transition-all duration-200 ${
               unreadCount > 0 
                 ? 'bg-red-50 hover:bg-red-100 text-red-600 shadow-sm' 
                 : 'hover:bg-slate-100 text-slate-600 hover:text-slate-800'
             }`}
           >
-            <FiBell className={`w-5 h-5 transition-transform duration-200 ${
+            <FiBell className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-200 ${
               unreadCount > 0 ? 'animate-pulse' : ''
             }`} />
             {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-red-600 text-white text-[10px] leading-none px-2 py-1 rounded-full font-semibold shadow-lg animate-bounce">
+              <span className="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-red-600 text-white text-[10px] leading-none px-1.5 sm:px-2 py-1 rounded-full font-semibold shadow-lg animate-bounce">
                 {unreadCount > 99 ? '99+' : unreadCount}
               </span>
             )}
           </button>
         </div>
-        {auth?.user ? (
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-lg">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span className="text-sm font-medium text-slate-700">{auth.user.role}</span>
-            </div>
-            <button onClick={onLogout} className="flex items-center gap-2 px-3 py-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all duration-200">
-              <MdAccountCircle className="w-5 h-5" />
-              <span className="text-sm font-medium">Logout</span>
-            </button>
-          </div>
-        ) : null}
       </div>
+
+      {/* User info and logout */}
+      {auth?.user ? (
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="hidden sm:flex items-center gap-2 px-2 sm:px-3 py-1.5 bg-slate-100 rounded-lg">
+            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+            <span className="text-xs sm:text-sm font-medium text-slate-700">{auth.user.role}</span>
+          </div>
+          <button 
+            onClick={onLogout} 
+            className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all duration-200"
+          >
+            <MdAccountCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline text-sm font-medium">Logout</span>
+          </button>
+        </div>
+      ) : null}
     </header>
   )
 }

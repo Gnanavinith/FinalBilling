@@ -63,16 +63,17 @@ const NewBill = () => {
   }, [draftItem])
 
   return (
-    <div className="p-6 bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
+    <div className="p-3 sm:p-4 lg:p-6 bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
       <div className="animate-fade-in">
-        <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent flex items-center gap-3">
-          <MdShoppingCart /> New Bill / POS
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent flex items-center gap-2 sm:gap-3">
+          <MdShoppingCart className="w-6 h-6 sm:w-8 sm:h-8" /> 
+          <span className="truncate">New Bill / POS</span>
         </h1>
-        <p className="text-slate-600 mb-8">Create and manage customer invoices</p>
+        <p className="text-sm sm:text-base text-slate-600 mb-4 sm:mb-6 lg:mb-8">Create and manage customer invoices</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6">
+        <div className="xl:col-span-2 space-y-4 sm:space-y-6">
           <CustomerDetailsForm
             customerName={customerName}
             setCustomerName={setCustomerName}
@@ -103,17 +104,19 @@ const NewBill = () => {
           />
         </div>
 
-        <InvoiceSummary
-          billNumber={billNumber}
-          calculations={calculations}
-          customerName={customerName}
-          mobileNumber={mobileNumber}
-          paymentMethod={paymentMethod}
-          items={items}
-          printInvoice={() => {/* print logic */ }}
-          exportPdf={() => {/* export logic */ }}
-          onCheckout={async () => {/* checkout logic */ }}
-        />
+        <div className="xl:col-span-1">
+          <InvoiceSummary
+            billNumber={billNumber}
+            calculations={calculations}
+            customerName={customerName}
+            mobileNumber={mobileNumber}
+            paymentMethod={paymentMethod}
+            items={items}
+            printInvoice={() => {/* print logic */ }}
+            exportPdf={() => {/* export logic */ }}
+            onCheckout={async () => {/* checkout logic */ }}
+          />
+        </div>
       </div>
 
       {/* // Add import at the top */}

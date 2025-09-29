@@ -10,15 +10,15 @@ const KpiCard = ({ icon: Icon, title, value, sub, color = "blue" }) => {
   }
   
   return (
-    <div className={`rounded-2xl ${colorClasses[color]} border p-6 shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300 transform hover:scale-105 relative z-10`}>
+    <div className={`rounded-xl sm:rounded-2xl ${colorClasses[color]} border p-4 sm:p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 sm:hover:-translate-y-2 transition-all duration-300 transform hover:scale-105 relative z-10`}>
       <div className="flex items-center justify-between">
-        <div className="animate-fade-in">
-          <div className="text-sm font-medium opacity-80 mb-1">{title}</div>
-          <div className="text-3xl font-bold">{value}</div>
+        <div className="animate-fade-in flex-1 min-w-0">
+          <div className="text-xs sm:text-sm font-medium opacity-80 mb-1 truncate">{title}</div>
+          <div className="text-xl sm:text-2xl lg:text-3xl font-bold truncate">{value}</div>
         </div>
-        {Icon ? <Icon className="text-4xl opacity-80 animate-pulse" /> : null}
+        {Icon ? <Icon className="text-2xl sm:text-3xl lg:text-4xl opacity-80 animate-pulse flex-shrink-0 ml-2" /> : null}
       </div>
-      {sub ? <div className="mt-3 text-xs font-medium opacity-70">{sub}</div> : null}
+      {sub ? <div className="mt-2 sm:mt-3 text-xs font-medium opacity-70 truncate">{sub}</div> : null}
     </div>
   )
 }

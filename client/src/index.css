@@ -127,3 +127,80 @@ html {
 button, input, select, textarea {
   font-family: inherit;
 }
+
+/* Responsive utilities */
+@media (max-width: 640px) {
+  .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+  
+  /* Ensure text is readable on small screens */
+  .text-responsive {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+  
+  /* Mobile-friendly button sizes */
+  .btn-mobile {
+    min-height: 44px;
+    padding: 0.75rem 1rem;
+  }
+  
+  /* Mobile-friendly input sizes */
+  .input-mobile {
+    min-height: 44px;
+    padding: 0.75rem;
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Desktop optimizations */
+@media (min-width: 1025px) {
+  .container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-break {
+    page-break-before: always;
+  }
+  
+  .print-avoid-break {
+    page-break-inside: avoid;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .border-slate-200 {
+    border-color: #000;
+  }
+  
+  .text-slate-600 {
+    color: #000;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

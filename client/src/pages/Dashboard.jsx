@@ -53,20 +53,22 @@ const Dashboard = () => {
   if (loading) return <LoadingSpinner />
   
   return (
-    <div className="p-6 bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen relative z-0">
+    <div className="p-3 sm:p-4 lg:p-6 bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen relative z-0">
       <div className="animate-fade-in">
-        <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
           Dashboard
         </h1>
-        <p className="text-slate-600 mb-8">Welcome to your business overview</p>
+        <p className="text-sm sm:text-base text-slate-600 mb-4 sm:mb-6 lg:mb-8">Welcome to your business overview</p>
       </div>
 
       {error && <ErrorMessage message={error} />}
 
-      <KpiGrid kpis={dashboardData.kpis} />
-      <ChartsSection charts={dashboardData.charts} />
-      <QuickActions />
-      <RecentActivity recent={dashboardData.recent} />
+      <div className="space-y-4 sm:space-y-6 lg:space-y-8">
+        <KpiGrid kpis={dashboardData.kpis} />
+        <ChartsSection charts={dashboardData.charts} />
+        <QuickActions />
+        <RecentActivity recent={dashboardData.recent} />
+      </div>
     </div>
   )
 }

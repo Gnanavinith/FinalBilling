@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react'
+import { FiDownload } from 'react-icons/fi'
 import PurchaseFilters from '../../components/purchase/purchasehistory/PurchaseFilters'
 import PurchaseTable from '../../components/purchase/purchasehistory/PurchaseTable'
 import PurchaseDetailsModal from '../../components/purchase/purchasehistory/PurchaseDetailsModal'

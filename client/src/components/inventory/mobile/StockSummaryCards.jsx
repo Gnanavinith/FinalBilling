@@ -37,21 +37,21 @@ const StockSummaryCards = ({ inventory, lowStockThreshold, lowStockItems, outOfS
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
       {summaryCards.map((card, index) => (
-        <div key={index} className="bg-white rounded-2xl border border-slate-200 p-4 shadow-lg hover:shadow-xl transition-all">
+        <div key={index} className="bg-white rounded-xl sm:rounded-2xl border border-slate-200 p-3 sm:p-4 shadow-lg hover:shadow-xl transition-all">
           <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-600">{card.title}</p>
-              <p className={`text-2xl font-semibold ${colorClasses[card.color].text}`}>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs sm:text-sm font-medium text-slate-600 truncate">{card.title}</p>
+              <p className={`text-lg sm:text-xl lg:text-2xl font-semibold ${colorClasses[card.color].text}`}>
                 {card.value}
               </p>
             </div>
-            <div className={`w-8 h-8 ${colorClasses[card.color].bg} rounded-full flex items-center justify-center`}>
+            <div className={`w-6 h-6 sm:w-8 sm:h-8 ${colorClasses[card.color].bg} rounded-full flex items-center justify-center flex-shrink-0 ml-2`}>
               {typeof card.icon === 'string' ? (
-                <span className="text-sm font-semibold">{card.icon}</span>
+                <span className="text-xs sm:text-sm font-semibold">{card.icon}</span>
               ) : (
-                <card.icon className={`w-4 h-4 ${colorClasses[card.color].text}`} />
+                <card.icon className={`w-3 h-3 sm:w-4 sm:h-4 ${colorClasses[card.color].text}`} />
               )}
             </div>
           </div>

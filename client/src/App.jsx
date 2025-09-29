@@ -1,9 +1,10 @@
-import React, { Suspense } from 'react'
+import React, { Suspense, useState } from 'react'
 import { HashRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Sidebar from './components/Sidebar/Sidebar'
 import Navbar from './components/Navbar'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import Login from './pages/Login'
+import CustomerChatbot from './components/ai-agents/CustomerChatbot'
 
 // Dynamic imports for code splitting
 const Dashboard = React.lazy(() => import('./pages/Dashboard'))
@@ -31,6 +32,7 @@ const AccessoriesStock = React.lazy(() => import('./pages/Stock/AccessoriesStock
 const SecondHandMobiles = React.lazy(() => import('./SecondHandMobile/SecondHandMobiles'))
 const SecondHandMobilesHistory = React.lazy(() => import('./SecondHandMobile/SecondHandMobilesHistory'))
 const Notifications = React.lazy(() => import('./pages/Notifications'))
+const AIAgentsDashboard = React.lazy(() => import('./components/ai-agents/AIAgentsDashboard'))
 
 // Loading component for Suspense
 const LoadingSpinner = () => (
@@ -57,6 +59,7 @@ const RequireAuth = ({ children }) => {
 
 const AppShell = () => {
   const { auth, isInitialized } = useAuth()
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   
   // Show loading while auth state is being initialized
   if (!isInitialized) {
@@ -64,13 +67,40 @@ const AppShell = () => {
   }
   
   return (
-    <HashRouter>
+    <HashRouter
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true
+      }}
+    >
       <div className="min-h-screen bg-white text-slate-900 transition-colors duration-200">
-        <div className="flex">
-          {auth.isAuthenticated ? <Sidebar /> : null}
-          <div className="flex-1">
-            {auth.isAuthenticated ? <Navbar /> : null}
-            <main className="p-2">
+        <div className="flex relative">
+          {/* Mobile sidebar overlay */}
+          {auth.isAuthenticated && sidebarOpen && (
+            <div 
+              className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+              onClick={() => setSidebarOpen(false)}
+            />
+          )}
+          
+          {/* Sidebar */}
+          {auth.isAuthenticated && (
+            <div className={`
+              fixed lg:static inset-y-0 left-0 z-50 lg:z-auto
+              transform transition-transform duration-300 ease-in-out
+              ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+              lg:translate-x-0
+            `}>
+              <Sidebar onClose={() => setSidebarOpen(false)} />
+            </div>
+          )}
+          
+          {/* Main content area */}
+          <div className="flex-1 flex flex-col min-w-0">
+            {auth.isAuthenticated && (
+              <Navbar onMenuClick={() => setSidebarOpen(true)} />
+            )}
+            <main className="flex-1 p-2 sm:p-4 lg:p-6 overflow-x-hidden">
               <Suspense fallback={<LoadingSpinner />}>
                 <Routes>
                   <Route path="/" element={<Navigate to="/dashboard" replace />} />
@@ -103,6 +133,8 @@ const AppShell = () => {
                   <Route path="/reports/service" element={<RequireAuth><ServiceReport /></RequireAuth>} />
                   <Route path="/reports/profit" element={<RequireAuth><ProfitReport /></RequireAuth>} />
 
+                  <Route path="/ai-agents" element={<RequireAuth><AIAgentsDashboard /></RequireAuth>} />
+
                   <Route path="/settings" element={<RequireAuth><Settings /></RequireAuth>} />
                   <Route path="/settings/profile" element={<RequireAuth><Profile /></RequireAuth>} />
                   <Route path="/settings/backup-restore" element={<RequireAuth><BackupRestore /></RequireAuth>} />
@@ -117,6 +149,7 @@ const AppShell = () => {
                 </Routes>
               </Suspense>
             </main>
+            <CustomerChatbot />
           </div>
         </div>
       </div>

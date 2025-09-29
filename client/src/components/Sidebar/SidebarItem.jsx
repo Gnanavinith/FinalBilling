@@ -8,7 +8,7 @@ const childLinkBaseClasses = 'flex items-center gap-3 px-3 py-2 rounded-xl text-
 const activeClasses = 'bg-gradient-to-r from-indigo-100 to-blue-100 text-slate-900 shadow'
 const inactiveClasses = 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
 
-const SidebarItem = ({ label, icon: Icon, to, childrenItems = [] }) => {
+const SidebarItem = ({ label, icon: Icon, to, childrenItems = [], onClose }) => {
   const location = useLocation()
   const hasChildren = childrenItems.length > 0
 
@@ -46,6 +46,7 @@ const SidebarItem = ({ label, icon: Icon, to, childrenItems = [] }) => {
                 key={child.to}
                 to={child.to}
                 className={({ isActive }) => `${childLinkBaseClasses} ${isActive ? activeClasses : inactiveClasses}`}
+                onClick={onClose}
                 end
               >
                 {child.icon ? <child.icon className="text-base text-slate-700" /> : <span className="w-4" />}
@@ -58,6 +59,7 @@ const SidebarItem = ({ label, icon: Icon, to, childrenItems = [] }) => {
         <NavLink
           to={to}
           className={({ isActive }) => `${linkBaseClasses} ${isActive ? activeClasses : inactiveClasses}`}
+          onClick={onClose}
           end
         >
           {Icon ? <Icon className="text-xl text-slate-700" /> : null}
