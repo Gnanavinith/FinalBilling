@@ -1,6 +1,6 @@
 import React from 'react'
 import SummaryCard from './SummaryCard'
-import { formatCurrency } from '../utils/formatters'
+import { formatCurrency } from '../../../utils/formatters'
 
 const SummaryCards = ({ summary }) => {
   const cards = [

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { formatCurrency } from '../utils/formatters'
+import { formatCurrency } from '../../../utils/formatters'
 
 const ProfitTable = ({ data }) => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' })

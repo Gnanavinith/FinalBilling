@@ -1,6 +1,5 @@
 import React from 'react'
 import { FiPackage, FiTag, FiSmartphone, FiDollarSign, FiCheckCircle, FiCalendar, FiDownload, FiAlertTriangle } from 'react-icons/fi'
-import InventoryTableRow from './InventoryTableRow'
 
 const InventoryTable = ({ inventory, lowStockThreshold, onDownloadStatement }) => {
   const getStockStatus = (stock) => {
@@ -89,6 +88,56 @@ const InventoryTable = ({ inventory, lowStockThreshold, onDownloadStatement }) =
         )}
       </div>
     </div>
+  )
+}
+
+// Desktop row component
+const InventoryTableRow = ({ item, lowStockThreshold, getStockStatus, onDownloadStatement }) => {
+  const stockStatus = getStockStatus(item.remainingStock)
+  const stockValue = item.remainingStock * item.purchasePrice
+  const lastUpdated = item.updatedAt ? new Date(item.updatedAt).toLocaleDateString() : new Date(item.createdAt).toLocaleDateString()
+
+  return (
+    <tr className="hover:bg-gray-50 transition-colors">
+      <td className="py-3 px-4 text-slate-900 font-medium">{item.productName}</td>
+      <td className="py-3 px-4 text-slate-700">{item.brand && item.brand.trim() ? item.brand : 'No Brand'}</td>
+      <td className="py-3 px-4 text-slate-700">{item.model}</td>
+      <td className="py-3 px-4 text-slate-700 font-mono">{item.imei1 || item.imei || '-'}</td>
+      <td className="py-3 px-4 text-slate-700 text-xs space-y-1">
+        {item.ram && <div>RAM: {item.ram}</div>}
+        {item.storage && <div>Storage: {item.storage}</div>}
+        {item.processor && <div>CPU: {item.processor}</div>}
+        {item.displaySize && <div>Display: {item.displaySize}</div>}
+      </td>
+      <td className="py-3 px-4">
+        <span className={`px-2 py-1 text-xs rounded-full font-medium ${
+          item.remainingStock <= 0 
+            ? 'bg-red-100 text-red-700' 
+            : item.remainingStock <= lowStockThreshold
+            ? 'bg-yellow-100 text-yellow-700'
+            : 'bg-green-100 text-green-700'
+        }`}>
+          {item.remainingStock}
+        </span>
+      </td>
+      <td className="py-3 px-4 text-slate-700">₹{item.purchasePrice.toFixed(2)}</td>
+      <td className="py-3 px-4 text-green-700 font-medium">₹{stockValue.toFixed(2)}</td>
+      <td className="py-3 px-4">
+        <span className={`inline-flex items-center space-x-1 px-2 py-1 text-xs rounded-full ${stockStatus.color}`}>
+          <FiCheckCircle className="w-3 h-3" />
+          <span>{stockStatus.text}</span>
+        </span>
+      </td>
+      <td className="py-3 px-4 text-slate-500 text-xs">{lastUpdated}</td>
+      <td className="py-3 px-4">
+        <button 
+          onClick={() => onDownloadStatement(item)}
+          className="px-3 py-1.5 text-xs rounded-md border hover:bg-slate-50 inline-flex items-center gap-1 bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100"
+        >
+          <FiDownload className="w-3 h-3" /> Download
+        </button>
+      </td>
+    </tr>
   )
 }
 

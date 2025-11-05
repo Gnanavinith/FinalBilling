@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
             // If we have a token, verify it with the server
             if (parsed.token) {
               try {
-                const response = await fetch('http://localhost:5000/api/auth/verify', {
+                const response = await fetch('https://finalbilling-6.onrender.com/api/auth/verify', {
                   headers: {
                     'Authorization': `Bearer ${parsed.token}`,
                   },
@@ -77,7 +77,7 @@ export const AuthProvider = ({ children }) => {
     
     try {
       // Use server-side authentication
-      const response = await fetch('http://localhost:5000/api/auth/login', {
+      const response = await fetch('https://finalbilling-6.onrender.com/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

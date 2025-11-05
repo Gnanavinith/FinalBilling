@@ -3,6 +3,7 @@ import { MdAccountCircle, MdInventory, MdWarning, MdInfo, MdMenu } from 'react-i
 import { FiBell } from 'react-icons/fi'
 import { useAuth } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import { apiBase } from '../utils/environment'
 
 const Navbar = ({ onMenuClick }) => {
   const { auth, logout } = useAuth()
@@ -11,8 +12,7 @@ const Navbar = ({ onMenuClick }) => {
   const [viewedItems, setViewedItems] = useState(new Set())
   const [unreadCount, setUnreadCount] = useState(0)
 
-  const isElectron = (typeof navigator !== 'undefined' && /Electron/i.test(navigator.userAgent))
-  const apiBase = isElectron ? 'http://127.0.0.1:5000' : (import.meta?.env?.VITE_API_BASE || '')
+  // Use centralized API base resolution
 
   // Load viewed items from localStorage
   useEffect(() => {

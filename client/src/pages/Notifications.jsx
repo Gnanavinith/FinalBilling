@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { FiBell, FiCheck, FiX, FiPackage, FiSmartphone, FiHeadphones, FiArrowLeft } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
+import { apiBase } from '../utils/environment'
 
 const Notifications = () => {
   const navigate = useNavigate()
@@ -9,8 +10,7 @@ const Notifications = () => {
   const [unreadCount, setUnreadCount] = useState(0)
   const [loading, setLoading] = useState(true)
 
-  const isElectron = (typeof navigator !== 'undefined' && /Electron/i.test(navigator.userAgent))
-  const apiBase = isElectron ? 'http://127.0.0.1:5000' : (import.meta?.env?.VITE_API_BASE || '')
+  // Use centralized API base resolution (Electron vs browser vs Vite env)
 
   // Load viewed items from localStorage
   useEffect(() => {
