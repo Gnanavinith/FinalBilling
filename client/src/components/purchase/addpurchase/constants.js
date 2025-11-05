@@ -91,6 +91,4 @@ export const generateInvoiceNumber = () => {
   return `INV-${yy}${mm}${dd}-${ms}`;
 };
 
-export const apiBase = (typeof window !== 'undefined' && window?.process?.versions?.electron) 
-  ? 'http://localhost:5000' 
-  : '';
+export { apiBase } from '../../../utils/environment';

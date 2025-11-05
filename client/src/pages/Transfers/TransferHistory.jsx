@@ -2,9 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react'
 import { FiFilter, FiDownload, FiEye, FiSearch, FiPrinter } from 'react-icons/fi'
 import { jsPDF } from 'jspdf'
 import 'jspdf-autotable'
-
-// Resolve API base: in Electron packaged app, backend is on localhost:5000; in dev use Vite proxy with empty base
-const apiBase = (typeof window !== 'undefined' && window?.process?.versions?.electron) ? 'http://localhost:5000' : ''
+import { apiBase } from '../../utils/environment'
 
 const TransferHistory = () => {
   const [transfers, setTransfers] = useState([])

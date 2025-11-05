@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { FiSave, FiPlus, FiTrash2, FiTruck, FiPackage } from 'react-icons/fi'
-
-// Resolve API base: in Electron packaged app, backend is on localhost:5000; in dev use Vite proxy with empty base
-const apiBase = (typeof window !== 'undefined' && window?.process?.versions?.electron) ? 'http://localhost:5000' : ''
+import { apiBase } from '../../utils/environment'
 const inventoryStorageKey = 'mobilebill:inventory'
 
 const NewTransfer = () => {

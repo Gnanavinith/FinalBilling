@@ -6,7 +6,7 @@ import PurchaseDetailsModal from '../../components/purchase/purchasehistory/Purc
 import { exportToPDF, exportToExcel } from '../../components/purchase/purchasehistory/utils/exportUtils'
 import { calculateRemainingStock, getDealerName } from '../../components/purchase/purchasehistory/utils/purchaseCalculations'
 
-const apiBase = 'http://localhost:5000'
+import { apiBase } from '../../utils/environment'
 
 const PurchaseHistory = () => {
   const [purchases, setPurchases] = useState([])

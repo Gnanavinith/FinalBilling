@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback } from 'react'
 
-const apiBase = (typeof window !== 'undefined' && window?.process?.versions?.electron) ? 'http://localhost:5000' : ''
+import { apiBase } from '../../../../utils/environment'
 
 export const useParts = (emptyPart, incoming) => {
   const [parts, setParts] = useState([])

@@ -6,7 +6,7 @@ import ServiceReportTable from '../../components/reports/ServiceReport/ServiceRe
 import { exportToPDF, exportToExcel } from '../../components/reports/ServiceReport/exportUtils'
 import { FiDownload, FiPrinter } from 'react-icons/fi'
 
-const apiBase = (typeof window !== 'undefined' && window?.process?.versions?.electron) ? 'http://localhost:5000' : ''
+import { apiBase } from '../../utils/environment'
 
 const ServiceReport = () => {
   const [serviceData, setServiceData] = useState([])

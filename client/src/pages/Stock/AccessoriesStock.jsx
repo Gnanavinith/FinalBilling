@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 
-const apiBase = 'http://localhost:5000'
+import { apiBase } from '../../utils/environment'
 
 const AccessoriesStock = () => {
   const [rows, setRows] = useState([])

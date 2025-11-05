@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 
-// Resolve API base consistently with other pages
-const apiBase = (typeof window !== 'undefined' && window?.process?.versions?.electron) ? 'http://localhost:5000' : ''
+import { apiBase } from '../../utils/environment'
 
 const MobilesStock = () => {
   const [rows, setRows] = useState([])
