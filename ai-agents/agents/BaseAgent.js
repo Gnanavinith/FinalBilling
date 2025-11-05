@@ -1,4 +1,3 @@
-const { GoogleGenerativeAI } = require('@google/generative-ai');
 const AgentLog = require('../models/AgentLog');
 const AgentInsight = require('../models/AgentInsight');
 
@@ -9,17 +8,13 @@ class BaseAgent {
     this.isActive = false;
     this.lastRun = null;
     this.config = {
-      geminiApiKey: process.env.GEMINI_API_KEY,
       updateInterval: parseInt(process.env.AGENT_UPDATE_INTERVAL) || 300000,
       maxRetries: 3,
       timeout: 30000
     };
-    
-    // Initialize Gemini AI
-    if (this.config.geminiApiKey) {
-      this.genAI = new GoogleGenerativeAI(this.config.geminiApiKey);
-      this.model = this.genAI.getGenerativeModel({ model: "gemini-pro" });
-    }
+
+    // AI model disabled (Gemini removed).
+    this.model = null;
   }
 
   async log(message, level = 'info', data = null) {
@@ -76,19 +71,10 @@ class BaseAgent {
   }
 
   async generateAIResponse(prompt, context = {}) {
-    if (!this.model) {
-      throw new Error('Gemini AI not initialized. Please check GEMINI_API_KEY.');
-    }
-
-    try {
-      const fullPrompt = this.buildPrompt(prompt, context);
-      const result = await this.model.generateContent(fullPrompt);
-      const response = await result.response;
-      return response.text();
-    } catch (error) {
-      await this.log(`AI Generation Error: ${error.message}`, 'error', { prompt, context });
-      throw error;
-    }
+    // Stubbed response since external AI is removed
+    const fullPrompt = this.buildPrompt(prompt, context);
+    await this.log('AI disabled: returning stubbed response', 'warn', { prompt: fullPrompt });
+    return 'AI is disabled in this environment.';
   }
 
   buildPrompt(prompt, context) {

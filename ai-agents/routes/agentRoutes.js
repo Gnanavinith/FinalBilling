@@ -230,13 +230,23 @@ router.post('/chatbot', async (req, res) => {
     // Get customer agent from app context
     const customerAgent = req.app.locals.customerAgent;
     if (!customerAgent) {
-      return res.status(500).json({ error: 'Customer agent not available' });
+      return res.json({
+        response: "Our assistant is initializing. Meanwhile: We can help with business hours, repairs, brands we sell, accessory availability, basic price guidance, and order status with your customer ID.",
+        type: 'unavailable',
+        confidence: 0.2,
+        metadata: { source: 'server_fallback' }
+      });
     }
     
     const response = await customerAgent.processCustomerQuery(query, customerId, sessionId);
     res.json(response);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.json({
+      response: "I couldn't process your request right now. Please try again in a moment or contact our store.",
+      type: 'error',
+      confidence: 0,
+      metadata: { error: error.message, source: 'exception_fallback' }
+    });
   }
 });
 

@@ -4,8 +4,9 @@ import SearchAndFilters from '../../components/inventory/accessories/SearchAndFi
 import InventoryTable from '../../components/inventory/accessories/InventoryTable'
 import LowStockAlert from '../../components/inventory/accessories/LowStockAlert'
 import CategoryBreakdown from '../../components/inventory/accessories/CategoryBreakdown'
+import { apiBase as apiBaseFromEnv } from '../../utils/environment'
 
-const apiBase = (typeof window !== 'undefined' && window?.process?.versions?.electron) ? 'http://localhost:5000' : ''
+const apiBase = String(apiBaseFromEnv || '').replace(/\/$/, '')
 
 const Accessories = () => {
   const [inventory, setInventory] = useState([])

@@ -37,7 +37,7 @@ Intelligent AI agents that actively monitor, analyze, and suggest actions for yo
 ## 🛠️ Technology Stack
 
 - **Backend**: Node.js + Express
-- **AI**: Google Gemini API (Free tier)
+- **AI**: (disabled by default; no external AI dependency)
 - **Database**: MongoDB
 - **Real-time**: Socket.IO
 - **PDF Generation**: PDFKit
@@ -48,7 +48,7 @@ Intelligent AI agents that actively monitor, analyze, and suggest actions for yo
 
 - Node.js 16+ and npm
 - MongoDB (local or Atlas)
-- Google Gemini API key (free)
+- No external AI API key required
 - Your existing billing system database
 
 ## 🚀 Installation
@@ -91,7 +91,7 @@ MONGODB_URI=mongodb://localhost:27017/billing_ai_agents
 MONGODB_URI_PROD=mongodb+srv://username:password@cluster.mongodb.net/billing_ai_agents
 
 # AI Configuration
-GEMINI_API_KEY=your_gemini_api_key_here
+# No AI keys required; AI features are disabled
 
 # Email Configuration (for notifications)
 SMTP_HOST=smtp.gmail.com
@@ -111,12 +111,9 @@ PAYMENT_REMINDER_DAYS=7
 FRAUD_DETECTION_THRESHOLD=10000
 ```
 
-### 4. Get Gemini API Key (Free)
+### 4. AI Setup
 
-1. Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
-2. Sign in with your Google account
-3. Create a new API key
-4. Copy the key to your `.env` file
+External AI is disabled. To integrate an AI provider, implement it in `agents/BaseAgent.js`.
 
 ### 5. Database Setup
 
@@ -240,10 +237,9 @@ The agents automatically monitor your existing collections:
 
 ### Common Issues
 
-1. **Gemini API Errors**
-   - Check API key validity
-   - Verify API quota limits
-   - Check network connectivity
+1. **AI Integration Errors**
+   - Ensure any custom AI provider keys are set
+   - Verify network connectivity
 
 2. **Database Connection Issues**
    - Verify MongoDB URI

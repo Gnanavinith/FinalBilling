@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { agentsBase } from '../../utils/environment';
 import { 
   FiSend, 
   FiUser, 
@@ -9,8 +10,8 @@ import {
   FiX
 } from 'react-icons/fi';
 
-// Configurable AI backend base URL (falls back to localhost:3001)
-const AI_BASE = (import.meta?.env?.VITE_AI_BASE_URL || 'http://localhost:3001').replace(/\/$/, '')
+// Use unified agents base URL from environment utils
+const AI_BASE = String(agentsBase || 'http://localhost:3001').replace(/\/$/, '')
 
 const CustomerChatbot = () => {
   const [isOpen, setIsOpen] = useState(false);

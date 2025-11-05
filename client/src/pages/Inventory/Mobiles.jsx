@@ -4,9 +4,10 @@ import SearchAndFilterBar from '../../components/inventory/mobile/SearchAndFilte
 import StockSummaryCards from '../../components/inventory/mobile/StockSummaryCards'
 import InventoryTable from '../../components/inventory/mobile/InventoryTable'
 import LowStockAlert from '../../components/inventory/mobile/LowStockAlert'
+import { apiBase as apiBaseFromEnv } from '../../utils/environment'
 
-// Resolve API base: in Electron packaged app, backend is on localhost:5000; in dev use Vite proxy with empty base
-const apiBase = (typeof window !== 'undefined' && window?.process?.versions?.electron) ? 'http://localhost:5000' : ''
+// Resolve API base from shared environment util
+const apiBase = String(apiBaseFromEnv || '').replace(/\/$/, '')
 
 const Mobiles = () => {
   const [inventory, setInventory] = useState([])

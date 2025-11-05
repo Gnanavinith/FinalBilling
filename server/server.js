@@ -41,7 +41,7 @@ app.use(cors());
 app.use(express.json());
 
 // Mongo connection
-const MONGO_URL = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/mobilebill'
+const MONGO_URL = process.env.MONGO_URL || 'mongodb+srv://varavind746:aravind123@cluster0.ydnlovq.mongodb.net/'
 console.log('Attempting MongoDB connection to:', MONGO_URL)
 mongoose.connect(MONGO_URL, {
   family: 4, // Force IPv4

@@ -361,7 +361,7 @@ const AIAgentsDashboard = () => {
             <div className="text-sm text-gray-600">Analyze patterns and generate recommendations</div>
           </button>
           <button
-            onClick={() => triggerAgentAction('inventory', 'check')}
+            onClick={() => triggerAgentAction('inventory', 'analyze')}
             className="p-3 border border-gray-300 rounded-lg hover:bg-gray-50 text-left"
           >
             <FiPackage className="w-5 h-5 text-green-600 mb-2" />
