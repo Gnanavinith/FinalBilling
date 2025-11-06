@@ -41,7 +41,9 @@ const ServiceAdvanceBill = () => {
     try {
       const raw = localStorage.getItem('mobilebill:settings')
       if (raw) biz = (JSON.parse(raw)?.businessInfo) || {}
-    } catch {}
+    } catch {
+      // Ignore parse errors
+    }
     const contact = [biz?.email, biz?.phone].filter(Boolean).join(' • ')
     return (
       <div className="text-center">
@@ -90,7 +92,9 @@ const ServiceAdvanceBill = () => {
                   const est = Number(svc.calculatedAmounts?.grandTotal)||Number(svc.serviceDetails?.estimatedCost)||0
                   setEstimatedTotal(est)
                   setPendingBalance(Math.max(est - adv, 0))
-                } catch (e) { alert('Lookup failed') }
+                } catch {
+                  alert('Lookup failed')
+                }
               }}
               className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-md"
             >

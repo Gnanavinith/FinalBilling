@@ -18,7 +18,7 @@ const Profile = () => {
     }
   })
 
-  const [loginHistory, setLoginHistory] = useState([
+  const [loginHistory] = useState([
     {
       id: 1,
       action: 'Login',

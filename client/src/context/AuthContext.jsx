@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { apiBase } from '../utils/environment'
 
 const STORAGE_KEY = 'mobilebill:auth'
 
@@ -10,7 +11,7 @@ const defaultAuth = {
 const AuthContext = createContext({
   auth: defaultAuth,
   isInitialized: false,
-  login: async (_email, _password) => {},
+  login: async () => {},
   logout: () => {},
 })
 
@@ -29,7 +30,7 @@ export const AuthProvider = ({ children }) => {
             // If we have a token, verify it with the server
             if (parsed.token) {
               try {
-                const response = await fetch('https://finalbilling-1.onrender.com/api/auth/verify', {
+                const response = await fetch(`${apiBase}/api/auth/verify`, {
                   headers: {
                     'Authorization': `Bearer ${parsed.token}`,
                   },
@@ -77,7 +78,7 @@ export const AuthProvider = ({ children }) => {
 
     try {
       // Use server-side authentication
-      const response = await fetch('https://finalbilling-1.onrender.com/api/auth/login', {
+      const response = await fetch(`${apiBase}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -101,7 +102,7 @@ export const AuthProvider = ({ children }) => {
         user: user,
         token: token,
       })
-    } catch (error) {
+    } catch {
       // Fallback to client-side authentication for development
       let role = null
       if (normalizedEmail === 'admin@gmail.com') role = 'admin'

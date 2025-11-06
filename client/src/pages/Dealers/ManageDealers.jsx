@@ -54,7 +54,9 @@ const ManageDealers = () => {
       const res = await fetch(`${apiBase}/api/dealers`)
       const data = await res.json()
       setDealers(Array.isArray(data) ? data : [])
-    } catch {}
+    } catch {
+      // Ignore errors
+    }
   }
 
   const validateUnique = () => {

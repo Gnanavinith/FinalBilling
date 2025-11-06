@@ -9,8 +9,7 @@ const PurchaseTable = ({
   onViewDetails,
   onMarkReceived,
   onLoadItemCodes,
-  getDealerName,
-  calculateRemainingStock
+  getDealerName
 }) => {
   if (purchases.length === 0) {
     return (
@@ -64,7 +63,6 @@ const PurchaseTable = ({
                   onMarkReceived={onMarkReceived}
                   onLoadItemCodes={onLoadItemCodes}
                   getDealerName={getDealerName}
-                  calculateRemainingStock={calculateRemainingStock}
                   isMobile={false}
                 />
               ))
@@ -83,10 +81,8 @@ const PurchaseTable = ({
               item={item}
               itemIndex={itemIndex}
               dealers={dealers}
-              itemCodes={itemCodes}
               onViewDetails={onViewDetails}
               onMarkReceived={onMarkReceived}
-              onLoadItemCodes={onLoadItemCodes}
               getDealerName={getDealerName}
             />
           ))
@@ -100,15 +96,11 @@ const PurchaseTable = ({
 const MobilePurchaseCard = ({
   purchase,
   item,
-  itemIndex,
   dealers,
-  itemCodes,
   onViewDetails,
   onMarkReceived,
-  onLoadItemCodes,
   getDealerName
 }) => {
-  const key = `${purchase.id}-${itemIndex}`
   
   return (
     <div className="bg-slate-50 rounded-xl p-4 border border-slate-200 shadow-sm">

@@ -178,10 +178,10 @@ export const formatCurrency = (amount) => {
 }
 
 // Export functions for PDF/Excel
-export const exportToPDF = (filteredData, calculateSummary) => {
+export const exportToPDF = () => {
   // PDF export implementation
 }
 
-export const exportToExcel = (filteredData) => {
+export const exportToExcel = () => {
   // Excel export implementation
 }

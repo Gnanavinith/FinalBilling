@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import SidebarItem from './SidebarItem'
 import { MdSpaceDashboard, MdReceiptLong, MdPeople, MdShoppingCart, MdInventory2, MdBuild, MdCompareArrows, MdAssessment, MdSettings, MdSmartphone, MdHeadphones, MdPhoneAndroid } from 'react-icons/md'
 import { MdPsychology } from 'react-icons/md'

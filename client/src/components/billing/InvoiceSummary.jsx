@@ -56,16 +56,19 @@ const CalculationSummary = ({ calculations }) => (
   </div>
 )
 
-const CalculationRow = ({ label, value, isNegative = false, icon: Icon }) => (
-  <div className="flex justify-between items-center py-1 sm:py-2 border-b border-gray-100">
-    <span className={`font-semibold inline-flex items-center gap-1 sm:gap-2 text-xs sm:text-sm ${isNegative ? 'text-red-600' : 'text-gray-700'}`}>
-      <Icon className="w-3 h-3 sm:w-4 sm:h-4" /> {label}
-    </span>
-    <span className={`font-bold text-xs sm:text-sm ${isNegative ? 'text-red-600' : 'text-gray-800'}`}>
-      {isNegative ? '- ' : ''}₹{Math.abs(value).toFixed(2)}
-    </span>
-  </div>
-)
+const CalculationRow = ({ label, value, isNegative = false, icon: Icon }) => {
+  const IconComponent = Icon
+  return (
+    <div className="flex justify-between items-center py-1 sm:py-2 border-b border-gray-100">
+      <span className={`font-semibold inline-flex items-center gap-1 sm:gap-2 text-xs sm:text-sm ${isNegative ? 'text-red-600' : 'text-gray-700'}`}>
+        <IconComponent className="w-3 h-3 sm:w-4 sm:h-4" /> {label}
+      </span>
+      <span className={`font-bold text-xs sm:text-sm ${isNegative ? 'text-red-600' : 'text-gray-800'}`}>
+        {isNegative ? '- ' : ''}₹{Math.abs(value).toFixed(2)}
+      </span>
+    </div>
+  )
+}
 
 const GrandTotalRow = ({ value }) => (
   <div className="pt-2 sm:pt-3 mt-2 sm:mt-3 border-t-2 border-indigo-300 flex justify-between items-center">

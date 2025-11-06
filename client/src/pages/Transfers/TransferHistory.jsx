@@ -122,7 +122,7 @@ const TransferHistory = () => {
     // Table data
     const tableData = []
     filteredTransfers.forEach(transfer => {
-      transfer.products.forEach((product, index) => {
+      transfer.products.forEach((product) => {
         tableData.push([
           transfer.id,
           getStoreName(fromOf(transfer)),

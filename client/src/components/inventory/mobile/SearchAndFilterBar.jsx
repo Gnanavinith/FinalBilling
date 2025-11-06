@@ -4,7 +4,6 @@ import { FiSearch, FiFilter } from 'react-icons/fi'
 const SearchAndFilterBar = ({
   searchInput,
   setSearchInput,
-  search,
   setSearch,
   filters,
   onFilterChange,

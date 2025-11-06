@@ -92,7 +92,7 @@ const NewTransfer = () => {
         return
       }
       setLookupError('No product found for given ID')
-    } catch (e) {
+    } catch {
       setLookupError('Lookup failed')
     } finally {
       setLookupLoading(false)
@@ -257,11 +257,13 @@ const NewTransfer = () => {
     }
   }
 
-  const updateInventory = (products, fromStore, toStore) => {
+  const updateInventory = () => {
+    // Function not currently used - inventory updates handled by server
+    // This would update local inventory when transfers are saved
     try {
       const existingInventory = JSON.parse(localStorage.getItem(inventoryStorageKey) || '[]')
       
-      products.forEach(product => {
+      form.products.forEach(product => {
         const productIndex = existingInventory.findIndex(item => item.id === product.productId)
         if (productIndex >= 0) {
           // Deduct from source store (assuming main inventory is source)

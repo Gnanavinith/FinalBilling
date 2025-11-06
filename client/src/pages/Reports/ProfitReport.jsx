@@ -1,11 +1,24 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import SummaryCards from '../../components/reports/profitreport/SummaryCards'
 import Filters from '../../components/reports/profitreport/Filters'
 import Charts from '../../components/reports/profitreport/Charts'
 import ProfitTable from '../../components/reports/profitreport/ProfitTable'
-import ExportButtons from '../../components/reports/profitreport/ExportButtons'
+import Header from '../../components/reports/profitreport/Header'
 import { useProfitData } from '../../components/reports/profitreport/hooks/useProfitData'
 import { useFilters } from '../../components/reports/profitreport/hooks/useFilters'
+import { calculateProfitSummary } from '../../components/reports/profitreport/hooks/formatters'
+
+const exportToPDF = () => {
+  // PDF export implementation
+}
+
+const exportToExcel = () => {
+  // Excel export implementation
+}
+
+const printReport = () => {
+  window.print()
+}
 
 const ProfitReport = () => {
   const { profitData } = useProfitData()

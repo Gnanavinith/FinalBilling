@@ -21,34 +21,6 @@ const ServiceReport = () => {
     serviceType: ''
   })
 
-  // Sample data - in real app, this would come from API/database
-  const sampleServiceData = [
-    {
-      serviceId: 'SRV-001234',
-      dateOfRequest: '2025-01-15',
-      customerName: 'Ravi Kumar',
-      customerPhone: '9876543210',
-      deviceName: 'iPhone 14 Pro',
-      deviceModel: 'A2888',
-      imei: '123456789012345',
-      problemDescription: 'Screen cracked, needs replacement',
-      partsUsed: [
-        { partName: 'Screen Assembly', quantity: 1, cost: 15000 },
-        { partName: 'Adhesive', quantity: 1, cost: 500 }
-      ],
-      serviceCharges: 2000,
-      totalAmount: 17500,
-      advancePaid: 5000,
-      pendingBalance: 12500,
-      serviceStatus: 'In Progress',
-      technicianName: 'Amit Sharma',
-      serviceStartDate: '2025-01-15',
-      estimatedDeliveryDate: '2025-01-18',
-      actualDeliveryDate: '',
-      notes: 'Customer requested quick repair'
-    },
-    // ... rest of your sample data
-  ]
 
   useEffect(() => {
     const load = async () => {
@@ -78,7 +50,7 @@ const ServiceReport = () => {
         }))
         setServiceData(rows)
         setFilteredData(rows)
-      } catch (e) {
+      } catch {
         // fallback to sample if fetch fails
         setServiceData([])
         setFilteredData([])

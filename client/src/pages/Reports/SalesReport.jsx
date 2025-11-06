@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect } from 'react'
 import SummaryCards from '../../components/reports/salesreport/SummaryCards'
 import Filters from '../../components/reports/salesreport/Filters'
 import Charts from '../../components/reports/salesreport/Charts'
 import SalesTable from '../../components/reports/salesreport/SalesTable'
-import { useSalesData, formatCurrency } from '../../components/reports/salesreport/utils'
+import { useSalesData } from '../../components/reports/salesreport/utils'
 import { FiPrinter, FiDownload, FiFileText, FiChevronUp } from 'react-icons/fi'
 
 const SalesReport = () => {
-  const { salesData, filteredData, filters, setFilters, calculateSummary } = useSalesData()
+  const { filteredData, filters, setFilters, calculateSummary } = useSalesData()
   const [showScrollToTop, setShowScrollToTop] = useState(false)
 
   // Handle scroll to top visibility

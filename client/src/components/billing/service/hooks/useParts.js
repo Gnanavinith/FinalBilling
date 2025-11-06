@@ -2,7 +2,7 @@ import { useState, useMemo, useCallback } from 'react'
 
 import { apiBase } from '../../../../utils/environment'
 
-export const useParts = (emptyPart, incoming) => {
+export const useParts = (emptyPart) => {
   const [parts, setParts] = useState([])
   const [draftPart, setDraftPart] = useState(emptyPart())
 
@@ -51,7 +51,7 @@ export const useParts = (emptyPart, incoming) => {
         name: row.productName || prev.name,
         price: Number(row.sellingPrice ?? row.unitPrice) || prev.price,
       }))
-    } catch (e) {
+    } catch {
       alert('Failed to fetch accessory')
     }
   }, [draftPart.productId])

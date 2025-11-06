@@ -1,7 +1,7 @@
 import React from 'react'
 import { MdListAlt, MdSchedule, MdDelete } from 'react-icons/md'
 
-const ItemsList = ({ items, draftItem, draftItemActive, removeItem, removeLastItem }) => {
+const ItemsList = ({ items, draftItem, draftItemActive, removeItem }) => {
   const calculateLineTotal = (item) => {
     const qty = Number(item.quantity) || 0
     const price = Number(item.price) || 0

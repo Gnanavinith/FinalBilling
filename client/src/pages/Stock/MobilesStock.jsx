@@ -247,7 +247,9 @@ const MobilesStock = () => {
                   if (Array.isArray(data) && data.length > 0 && !form.brand) {
                     setForm(prev=>({...prev, brand: data[0].brand}))
                   }
-                } catch {}
+                } catch {
+                  // Ignore errors
+                }
               }} placeholder="e.g., F29 Pro, V30" />
             </div>
             <div>

@@ -19,7 +19,6 @@ import { FaBrain } from 'react-icons/fa';
 const AIAgentsDashboard = () => {
   const [agents, setAgents] = useState({});
   const [insights, setInsights] = useState([]);
-  const [logs, setLogs] = useState([]);
   const [stats, setStats] = useState({});
   const [loading, setLoading] = useState(true);
   const [selectedAgent, setSelectedAgent] = useState('all');

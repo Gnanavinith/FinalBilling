@@ -3,9 +3,7 @@ import { useState, useEffect } from 'react'
 import { apiBase } from '../../../utils/environment'
 
 export const useProductLookup = (draftItem, setDraftItem) => {
-  const [lookupLoading, setLookupLoading] = useState(false)
   const [productSuggestions, setProductSuggestions] = useState([])
-  const [imeiSuggestions, setImeiSuggestions] = useState([])
   const [showProductSuggestions, setShowProductSuggestions] = useState(false)
   const [showImeiSuggestions, setShowImeiSuggestions] = useState(false)
   const [allProducts, setAllProducts] = useState([])
@@ -89,7 +87,7 @@ export const useProductLookup = (draftItem, setDraftItem) => {
     }
   }
 
-  const selectProductSuggestion = (product) => {
+  const selectProductSuggestion = () => {
     // Implementation for selecting product suggestion
   }
 
@@ -98,9 +96,7 @@ export const useProductLookup = (draftItem, setDraftItem) => {
   }
 
   return {
-    lookupLoading,
     productSuggestions,
-    imeiSuggestions,
     showProductSuggestions,
     showImeiSuggestions,
     handleProductNameChange,

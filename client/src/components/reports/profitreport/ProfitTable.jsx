@@ -25,10 +25,6 @@ const ProfitTable = ({ data }) => {
     }))
   }
 
-  const getSortIcon = (key) => {
-    if (sortConfig.key !== key) return '↕️'
-    return sortConfig.direction === 'asc' ? '↑' : '↓'
-  }
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
@@ -44,6 +40,11 @@ const ProfitTable = ({ data }) => {
       </div>
     </div>
   )
+}
+
+const getSortIcon = (key, sortConfig) => {
+  if (sortConfig.key !== key) return '↕️'
+  return sortConfig.direction === 'asc' ? '↑' : '↓'
 }
 
 const TableHeader = ({ sortConfig, onSort }) => (

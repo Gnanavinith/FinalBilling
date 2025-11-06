@@ -1,5 +1,5 @@
 import React from 'react'
-import { isElectron, apiBase } from '../utils/environment'
+import { apiBase } from '../utils/environment'
 import KpiGrid from '../components/dashboard/KpiGrid'
 import ChartsSection from '../components/dashboard/ChartsSection'
 import QuickActions from '../components/dashboard/QuickActions'

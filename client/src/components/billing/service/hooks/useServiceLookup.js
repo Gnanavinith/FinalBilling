@@ -42,7 +42,7 @@ export const useServiceLookup = (setCustomerInfo, setParts, setLaborCost, setPay
       setLaborCost(Number(service?.serviceDetails?.estimatedCost) || 0)
       setPaymentMethod(service?.serviceDetails?.paymentMode || 'Cash')
       setAdvancePaid(Number(service?.serviceDetails?.advancePayment) || 0)
-    } catch (e) {
+    } catch {
       alert('Lookup failed')
     }
   }

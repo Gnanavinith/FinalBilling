@@ -7,12 +7,11 @@ const PurchaseTableRow = ({
   item,
   itemIndex,
   dealers,
-  itemCodes,
+  itemCodes = {},
   onViewDetails,
   onMarkReceived,
   onLoadItemCodes,
   getDealerName,
-  calculateRemainingStock,
   isMobile = false
 }) => {
   const key = `${purchase.id}-${itemIndex}`

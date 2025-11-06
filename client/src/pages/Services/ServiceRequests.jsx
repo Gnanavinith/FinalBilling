@@ -799,7 +799,9 @@ const ServiceRequests = () => {
           try {
             const raw = localStorage.getItem('mobilebill:settings')
             if (raw) biz = (JSON.parse(raw)?.businessInfo) || {}
-          } catch {}
+          } catch {
+            // Ignore parse errors
+          }
           const contact = [biz?.email, biz?.phone].filter(Boolean).join(' • ')
           return (
             <div className="text-center">

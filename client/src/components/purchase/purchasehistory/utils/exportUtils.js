@@ -1,6 +1,5 @@
 import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
-import { getDealerName, calculateRemainingStock } from './purchaseCalculations'
 
 export const exportToPDF = (filteredPurchases, dealers, filters, calculateRemainingStock) => {
   const doc = new jsPDF()

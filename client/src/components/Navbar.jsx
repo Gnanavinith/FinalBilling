@@ -8,7 +8,7 @@ import { apiBase } from '../utils/environment'
 const Navbar = ({ onMenuClick }) => {
   const { auth, logout } = useAuth()
   const navigate = useNavigate()
-  const [lowStock, setLowStock] = useState([])
+  const [, setLowStock] = useState([])
   const [viewedItems, setViewedItems] = useState(new Set())
   const [unreadCount, setUnreadCount] = useState(0)
 

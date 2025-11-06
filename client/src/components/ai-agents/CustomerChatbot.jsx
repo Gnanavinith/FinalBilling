@@ -11,7 +11,7 @@ import {
 } from 'react-icons/fi';
 
 // Use unified agents base URL from environment utils
-const AI_BASE = String(agentsBase || 'http://localhost:3001').replace(/\/$/, '')
+const AI_BASE = String(agentsBase || 'https://finalbilling-1.onrender.com').replace(/\/$/, '')
 
 const CustomerChatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -93,7 +93,7 @@ const CustomerChatbot = () => {
       let data
       try {
         data = await response.json()
-      } catch (_) {
+      } catch {
         data = { error: 'Invalid server response' }
       }
 

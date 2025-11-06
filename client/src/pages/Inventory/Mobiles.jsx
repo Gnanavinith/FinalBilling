@@ -14,7 +14,7 @@ const Mobiles = () => {
   const [storeStock, setStoreStock] = useState([])
   const [searchInput, setSearchInput] = useState('')
   const [search, setSearch] = useState('')
-  const [storeId, setStoreId] = useState('')
+  const [storeId] = useState('')
   const [filters, setFilters] = useState({
     brand: '',
     mobile: '',
@@ -239,7 +239,7 @@ const Mobiles = () => {
       a.click()
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
-    } catch (e) {
+    } catch {
       alert('Failed to download statement')
     }
   }

@@ -49,14 +49,17 @@ const QuickActions = () => {
   )
 }
 
-const ActionLink = ({ to, icon: Icon, label, gradient }) => (
-  <Link 
-    to={to} 
-    className={`group inline-flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl bg-gradient-to-r ${gradient} text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 relative z-10 text-sm sm:text-base`}
-  >
-    <Icon className="text-lg sm:text-xl group-hover:animate-bounce" />
-    <span className="font-semibold truncate">{label}</span>
-  </Link>
-)
+const ActionLink = ({ to, icon: Icon, label, gradient }) => {
+  const IconComponent = Icon
+  return (
+    <Link 
+      to={to} 
+      className={`group inline-flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl bg-gradient-to-r ${gradient} text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 relative z-10 text-sm sm:text-base`}
+    >
+      <IconComponent className="text-lg sm:text-xl group-hover:animate-bounce" />
+      <span className="font-semibold truncate">{label}</span>
+    </Link>
+  )
+}
 
 export default QuickActions
