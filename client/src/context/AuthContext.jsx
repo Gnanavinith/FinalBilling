@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
             // If we have a token, verify it with the server
             if (parsed.token) {
               try {
-                const response = await fetch('https://finalbilling-6.onrender.com/api/auth/verify', {
+                const response = await fetch('https://finalbilling-1.onrender.com/api/auth/verify', {
                   headers: {
                     'Authorization': `Bearer ${parsed.token}`,
                   },
@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }) => {
         setIsInitialized(true)
       }
     }
-    
+
     loadAuthState()
   }, [])
 
@@ -74,10 +74,10 @@ export const AuthProvider = ({ children }) => {
   const login = useCallback(async (email, password) => {
     const normalizedEmail = String(email || '').trim().toLowerCase()
     const normalizedPassword = String(password || '').trim()
-    
+
     try {
       // Use server-side authentication
-      const response = await fetch('https://finalbilling-6.onrender.com/api/auth/login', {
+      const response = await fetch('https://finalbilling-1.onrender.com/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -94,12 +94,12 @@ export const AuthProvider = ({ children }) => {
       }
 
       const { token, user } = await response.json()
-      
+
       // Store token and user info
-      setAuth({ 
-        isAuthenticated: true, 
+      setAuth({
+        isAuthenticated: true,
         user: user,
-        token: token 
+        token: token,
       })
     } catch (error) {
       // Fallback to client-side authentication for development
@@ -133,5 +133,3 @@ export const AuthProvider = ({ children }) => {
 }
 
 export const useAuth = () => useContext(AuthContext)
-
-
